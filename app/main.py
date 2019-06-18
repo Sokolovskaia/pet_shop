@@ -64,6 +64,18 @@ def start():
 
         return render_template('new_pet.html')
 
+    @app.route("/remove/<vendor_code>", methods=['GET', 'POST'])
+    def remove(vendor_code):
+        if request.method == 'GET':
+            search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
+            return render_template('remove.html', good=search_by_vendor_code_result)
+        if request.method == 'POST':
+            db.remove_by_vendor_code(db.open_db(db_url), vendor_code)
+            return redirect(url_for('all_pets'))
+
+
+
+
     if os.getenv('APP_ENV') == 'PROD' and os.getenv('PORT'):
         waitress.serve(app, port=os.getenv('PORT'))
     else:

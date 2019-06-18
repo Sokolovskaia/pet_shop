@@ -96,3 +96,12 @@ def create_new_pet(connection, vendor_code, category, breed, gender, birthdate, 
              'name': name, 'price': price, 'description': description})
         connection.commit()
 
+def remove_by_vendor_code(connection, vendor_code):
+    with connection:
+        cursor = connection.cursor()
+        cursor.execute("""
+        DELETE FROM goods
+              WHERE vendor_code = :vendor_code
+        """, {'vendor_code': vendor_code})
+        connection.commit()
+

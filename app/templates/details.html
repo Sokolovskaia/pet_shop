@@ -21,7 +21,8 @@
     <p class="card-text">Описание: {{ good.description }} </p>
     <p class="card-text"><small class="text-muted">Артикул: {{ good.vendor_code }}</small></p>
   </div>
-  <img src="/static/{{ good.photo }}" class="card-img-top" alt="ээээээээээээ">
+  <img src="/static/{{ good.photo }}" class="card-img-top" alt="{{ good.category }} {{ good.name }} ">
 </div>
+    <a class="btn btn-danger" href="{{ url_for('remove', vendor_code=good.vendor_code) }}">Удалить объявление</a>
 </body>
 </html>

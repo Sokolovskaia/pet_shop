@@ -105,3 +105,21 @@ def remove_by_vendor_code(connection, vendor_code):
         """, {'vendor_code': vendor_code})
         connection.commit()
 
+
+def edit_by_vendor_code(connection, vendor_code, category, breed, gender, birthdate, name, price, description):
+    with connection:
+        cursor = connection.cursor()
+        cursor.execute("""
+        UPDATE goods 
+           SET category = :category
+             , breed = :breed
+             , gender = :gender
+             , birthdate = :birthdate
+             , name = :name
+             , price = :price
+             , description = :description
+         WHERE vendor_code = :vendor_code
+        """, {'vendor_code': vendor_code, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
+             'name': name, 'price': price, 'description': description})
+        connection.commit()
+

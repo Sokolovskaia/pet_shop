@@ -73,8 +73,23 @@ def start():
             db.remove_by_vendor_code(db.open_db(db_url), vendor_code)
             return redirect(url_for('all_pets'))
 
+    @app.route("/edit/<vendor_code>", methods=['GET', 'POST'])
+    def edit(vendor_code):
+        if request.method == 'GET':
+            search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
+            return render_template('edit.html', good=search_by_vendor_code_result)
 
-
+        if request.method == 'POST':
+            category = request.form['category']
+            breed = request.form['breed']
+            gender = request.form['gender']
+            birthdate = request.form['birthdate']
+            name = request.form['name']
+            price = int(request.form['price'])
+            description = request.form['description']
+            db.edit_by_vendor_code(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price,
+                                   description)
+            return redirect(url_for('all_pets', vendor_code=vendor_code))
 
     if os.getenv('APP_ENV') == 'PROD' and os.getenv('PORT'):
         waitress.serve(app, port=os.getenv('PORT'))

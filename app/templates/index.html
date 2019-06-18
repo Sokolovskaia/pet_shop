@@ -11,6 +11,9 @@
     <title>Зоомагазин</title>
 </head>
 <body>
+<div class="container">
+<div class="row">
+    <div class="col-sm-15">
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
@@ -81,17 +84,13 @@
     </div>
 </nav>
 
-
 <div class="container-fluid" style="display: inline-block">
-    <div class="row">
-        <header class="col-md-3">
-        <p class="h2 text-center font-weight-bold">Наш зоомагазин</p>
-        </header>
-        <div class="card-columns">
+
+
+        <div class="card-columns" style="max-width: 900px;">
             {% for good in goods %}
             <div class="card">
-                <img src="/static/{{ good.photo }}" class="card-img-top" alt="Ваш будущий четвероногий друг" width="25"
-                     height="250">
+                <img src="/static/{{ good.photo }}" class="card-img-top" alt="Ваш будущий четвероногий друг">
                 <div class="card-body">
                     <h5 class="card-title">{{ good.category }} </h5>
                     <p class="card-text"> Чудесный друг {{ good.name }} породы {{ good.breed }} ждет новых хозяев
@@ -103,9 +102,12 @@
                 </div>
             </div>
             {% endfor %}
+             <p><a class="btn btn-info" href="{{ url_for('new_pet') }}">Пристроить животное</a></p>
         </div>
     </div>
-    <p><a class="btn btn-info" href="{{ url_for('new_pet') }}">Пристроить животное</a></p>
-</div>
-</body>
+
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

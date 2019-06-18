@@ -10,19 +10,28 @@
     <title>{{good.vendor_code}}</title>
 </head>
 <body>
+
     <p class="h3 text-center font-weight-bold">Подробнее о животном по имени {{ good.name }}</p>
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">{{ good.category }} породы {{ good.breed }}</h5>
-    <p class="card-text">Кличка: {{ good.name }}</p>
-    <p class="card-text">Пол: {{ good.gender }}</p>
-    <p class="card-text">Дата рождения: {{ good.birthdate }}</p>
-    <p class="card-text">Цена: {{ good.price }} руб.</p>
-    <p class="card-text">Описание: {{ good.description }} </p>
-    <p class="card-text"><small class="text-muted">Артикул: {{ good.vendor_code }}</small></p>
+
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src="/static/{{ good.photo }}" class="card-img" alt="{{ good.category }} {{ good.name }}">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{ good.category }} породы {{ good.breed }}</h5>
+        <p class="card-text">Кличка: {{ good.name }}</p>
+        <p class="card-text">Пол: {{ good.gender }}</p>
+        <p class="card-text">Дата рождения: {{ good.birthdate }}</p>
+        <p class="card-text">Цена: {{ good.price }} руб.</p>
+        <p class="card-text">Описание: {{ good.description }} </p>
+        <p class="card-text"><small class="text-muted">Артикул: {{ good.vendor_code }}</small></p>
+      </div>
+    </div>
   </div>
-  <img src="/static/{{ good.photo }}" class="card-img-top" alt="{{ good.category }} {{ good.name }} ">
 </div>
-    <a class="btn btn-danger" href="{{ url_for('remove', vendor_code=good.vendor_code) }}">Удалить объявление</a>
+        <a class="btn btn-danger" href="{{ url_for('remove', vendor_code=good.vendor_code) }}">Удалить объявление</a>
+
 </body>
 </html>

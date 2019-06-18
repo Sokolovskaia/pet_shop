@@ -69,8 +69,7 @@ def another_pets(connection):
 def search_by_vendor_code(connection, vendor_code):
     with connection:
         cursor = connection.cursor()
-        result = cursor.execute(
-            """SELECT * 
+        result = cursor.execute("""SELECT * 
                  FROM goods 
                 WHERE vendor_code = :vendor_code""",
             {'vendor_code': vendor_code}).fetchone()

@@ -14,9 +14,6 @@ def start():
     )
     db_url = 'db.sqlite'
 
-
-
-
     @app.route('/', methods=('GET', 'POST'))
     def all_pets():
         search = request.args.get('search')
@@ -25,7 +22,6 @@ def start():
             return render_template('index.html', goods=search_result, search=search, active_index='all_pets')
         all_pets_result = db.all_pets(db.open_db(db_url))
         return render_template('index.html', goods=all_pets_result, active_index='all_pets')
-
 
     @app.route('/dogs', methods=('GET', 'POST'))
     def dogs():
@@ -42,13 +38,10 @@ def start():
         another_pets_result = db.another_pets(db.open_db(db_url))
         return render_template('index.html', goods=another_pets_result, active_index='another_pets')
 
-    @app.route("/details/<vendor_code>", methods=['GET'])
+    @app.route("/details/<vendor_code>", methods=('GET', 'POST'))
     def details(vendor_code):
         search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
         return render_template('details.html', good=search_by_vendor_code_result)
-
-
-
 
     @app.route('/new_pet', methods=('GET', 'POST'))
     def new_pet():
@@ -65,12 +58,11 @@ def start():
             price = int(request.form['price'])
             description = request.form['description']
 
-            db.create_new_pet(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price, description)
+            db.create_new_pet(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price,
+                              description)
             return redirect(url_for('all_pets'))
 
         return render_template('new_pet.html')
-
-
 
     if os.getenv('APP_ENV') == 'PROD' and os.getenv('PORT'):
         waitress.serve(app, port=os.getenv('PORT'))
@@ -80,4 +72,3 @@ def start():
 
 if __name__ == '__main__':
     start()
-

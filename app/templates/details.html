@@ -10,6 +10,9 @@
     <title>{{good.vendor_code}}</title>
 </head>
 <body>
+<div class="container">
+<div class="row">
+    <div class="col">
 
     <p class="h3 text-center font-weight-bold">Подробнее о животном по имени {{ good.name }}</p>
 
@@ -32,6 +35,8 @@
   </div>
 </div>
         <a class="btn btn-danger" href="{{ url_for('remove', vendor_code=good.vendor_code) }}">Удалить объявление</a>
-
+    </div>
+    </div>
+    </div>
 </body>
 </html>

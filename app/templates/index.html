@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+{% set active_index = active_index|default('index') -%}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Зоомагазин</title>
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+
+           <a href="{{ url_for('all_pets') }}" class="nav-link">
+
+                                {% if active_index == 'all_pets' %}
+                                <h3> Наши животные </h3>
+                                {% else %}
+                                Наши животные
+                                {% endif %}
+                            </a>
+
+
+      </li>
+      <li class="nav-item">
+
+                            <a href="{{ url_for('dogs') }}" class="nav-link">
+
+                                {% if active_index == 'dogs' %}
+                                <h3> Собаки </h3>
+                                {% else %}
+                                Собаки
+                                {% endif %}
+                            </a>
+
+
+      </li>
+
+              <li class="nav-item">
+
+                            <a href="{{ url_for('cats') }}" class="nav-link">
+
+                                {% if active_index == 'cats' %}
+                                <h3> Кошки </h3>
+                                {% else %}
+                                Кошки
+                                {% endif %}
+                            </a>
+
+
+
+      </li>
+
+                      <li class="nav-item">
+
+                            <a href="{{ url_for('another_pets') }}" class="nav-link">
+
+                                {% if active_index == 'another_pets' %}
+                                <h3> Другие животные </h3>
+                                {% else %}
+                                Другие животные
+                                {% endif %}
+                            </a>
+
+
+
+      </li>
+
+
+
+
+
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         О нас
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Наша политика</a>
+          <a class="dropdown-item" href="#">Сотрудники</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Контакты</a>
+        </div>
+      </li>
+
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" name="search" placeholder="Я ищу..." aria-label="Search" value="{{ search }}">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >Поиск</button>
+    </form>
+  </div>
+</nav>
+
+
+<div class="container-fluid" style="display: inline-block">
+    <div class="row">
+        <header class="col-md-3">
+
+        </header>
+<p class="h2 text-center font-weight-bold">Наш зоомагазин</p>
+
+
+<div class="card-columns">
+
+     {% for good in goods %}
+
+  <div class="card">
+
+    <img src="static/{{ good.photo }}" class="card-img-top" alt="Ваш будущий четвероногий друг" width="25" height="250">
+    <div class="card-body">
+      <h5 class="card-title">{{ good.category }} </h5>
+        <p class="card-text"> Чудесный друг {{ good.name }} породы {{ good.breed }} ждет новых хозяев
+
+        </p>
+
+
+
+      <div class="card-footer">
+
+          <small class="text-muted"> <a href="{{ url_for('details', vendor_code=good.vendor_code) }}"> Артикул: {{ good.vendor_code }} </a></small>
+    </div>
+  </div></div>
+{% endfor %}
+
+
+
+  </div>
+</div>
+
+
+ <p><a class="btn btn-info" href="{{ url_for('new_pet') }}">Пристроить животное</a></p>
+
+
+
+
+
+        </div>
+        </div>
+
+</body>
+</html>

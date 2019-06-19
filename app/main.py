@@ -1,10 +1,12 @@
 import waitress
 
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 from app import db
 
 import os
+
+from app.db import validate_user
 
 
 def start():
@@ -13,6 +15,35 @@ def start():
         SECRET_KEY='Marina_secret_key',
     )
     db_url = 'db.sqlite'
+
+
+
+    @app.route('/login', methods=('GET', 'POST'))
+    def login():
+        if request.method == 'POST':
+            login = request.form['login']
+            password = request.form['password']
+            val = validate_user(db.open_db(db_url), login, password)
+
+            if val['success']:
+                session.clear()
+                session['id'] = val['id']
+                session['login'] = val['login']
+                session['surname'] = val['surname']
+                session['name'] = val['name']
+                session['phone_number'] = val['phone_number']
+
+                return redirect(url_for('all_pets', username=session['id']))
+
+            flash(val['error'])
+
+        return render_template('login.html')
+
+
+
+
+
+
 
     @app.route('/', methods=('GET', 'POST'))
     def all_pets():

@@ -18,14 +18,55 @@ def create_table_goods(connection):
             breed TEXT,
             gender TEXT,
             birthdate NUMERIC,
-            name TEXT NOT NULL,
+            name TEXT,
             price INTEGER NOT NULL,
             presence INTEGER DEFAULT 0 CHECK (presence IN (1, 0)),
-            photo TEXT,
-            description TEXT
+            photo TEXT DEFAULT '7.jpg',
+            description TEXT,
+            author_id INTEGER NOT NULL,
+            FOREIGN KEY (author_id) REFERENCES users (id)
         );
         """)
         connection.commit()
+
+
+def create_table_users(connection):
+    with connection:
+        cursor = connection.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT
+          , login TEXT NOT NULL UNIQUE 
+          , password TEXT NOT NULL
+          , surname TEXT NOT NULL
+          , name TEXT NOT NULL
+          , phone_number INTEGER NOT NULL UNIQUE 
+        );
+        """)
+        connection.commit()
+
+
+def validate_user(connection, login, password):
+    with connection:
+        cursor = connection.cursor()
+        result = {'success': False}
+        user = cursor.execute('SELECT * FROM users WHERE login = :login', {'login': login}).fetchone()
+
+        if user is None:
+            result['error'] = 'Пользователь не найден'
+        elif not user['password'] == password:
+            result['error'] = 'Неверный пароль'
+        else:
+            result['id'] = user['id']
+            result['login'] = user['login']
+            result['surname'] = user['surname']
+            result['name'] = user['name']
+            result['phone_number'] = user['phone_number']
+            result['success'] = True
+
+        return result
+
+
 
 
 def get_all(connection):

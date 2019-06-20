@@ -33,17 +33,22 @@ def start():
                 session['name'] = val['name']
                 session['phone_number'] = val['phone_number']
 
-                return redirect(url_for('all_pets', username=session['id']))
+                return redirect(url_for('account', username=session['id']))
 
             flash(val['error'])
 
         return render_template('login.html')
 
-
-
-
-
-
+    @app.route('/account', methods=('GET', 'POST'))
+    def account():
+        username = session['id']
+        user_login = session['login']
+        user_surname = session['surname']
+        user_name = session['name']
+        user_phone_number = session['phone_number']
+        ads_for_user = db.all_ads_for_user(db.open_db(db_url), username)
+        return render_template('account.html', ads_for_user=ads_for_user, user_id=username, user_login=user_login, user_surname=user_surname,
+                           user_name=user_name, user_phone_number=user_phone_number, active_index='account')
 
     @app.route('/', methods=('GET', 'POST'))
     def all_pets():

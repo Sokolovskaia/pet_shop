@@ -20,7 +20,7 @@
             <li class="nav-item">
                 <a href="{{ url_for('all_pets') }}" class="nav-link">
                     {% if active_index == 'all_pets' %}
-                    <h3> Наши животные </h3>
+                    <h4> Наши животные </h4>
                     {% else %}
                     Наши животные
                     {% endif %}
@@ -30,7 +30,7 @@
                 <a href="{{ url_for('dogs') }}" class="nav-link">
 
                     {% if active_index == 'dogs' %}
-                    <h3> Собаки </h3>
+                    <h4> Собаки </h4>
                     {% else %}
                     Собаки
                     {% endif %}
@@ -39,7 +39,7 @@
             <li class="nav-item">
                 <a href="{{ url_for('cats') }}" class="nav-link">
                     {% if active_index == 'cats' %}
-                    <h3> Кошки </h3>
+                    <h4> Кошки </h4>
                     {% else %}
                     Кошки
                     {% endif %}
@@ -48,7 +48,7 @@
             <li class="nav-item">
                 <a href="{{ url_for('another_pets') }}" class="nav-link">
                     {% if active_index == 'another_pets' %}
-                    <h3> Другие животные </h3>
+                    <h4> Другие животные </h4>
                     {% else %}
                     Другие животные
                     {% endif %}
@@ -57,23 +57,21 @@
             <li class="nav-item">
                 <a href="{{ url_for('new_pet') }}" class="nav-link">
                     {% if active_index == 'new_pet' %}
-                    <h3> Пристроить животное </h3>
+                    <h4> Пристроить животное </h4>
                     {% else %}
                     Пристроить животное
                     {% endif %}
                 </a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    О нас
+
+            <li class="nav-item">
+                <a href="{{ url_for('login') }}" class="nav-link">
+                    {% if active_index == 'login' %}
+                    <h4> Войти </h4>
+                    {% else %}
+                    Войти
+                    {% endif %}
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Наша политика</a>
-                    <a class="dropdown-item" href="#">Сотрудники</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Контакты</a>
-                </div>
             </li>
 
         </ul>
@@ -99,7 +97,7 @@
                     </p>
                     <div class="card-footer">
                         <small class="text-muted"><a href="{{ url_for('details', vendor_code=good.vendor_code) }}">
-                            Артикул: {{ good.vendor_code }} </a></small>
+                            Подробнее </a></small>
                     </div>
                 </div>
             </div>

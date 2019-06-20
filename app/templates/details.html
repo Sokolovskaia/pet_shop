@@ -29,13 +29,12 @@
         <p class="card-text">Дата рождения: {{ good.birthdate }}</p>
         <p class="card-text">Цена: {{ good.price }} руб.</p>
         <p class="card-text">Описание: {{ good.description }} </p>
-        <p class="card-text"><small class="text-muted">Артикул: {{ good.vendor_code }}</small></p>
+        <p class="card-text"><small class="text-muted">Номер объявления: {{ good.vendor_code }} </small></p>
       </div>
     </div>
   </div>
 </div>
-        <a class="btn btn-success" href="{{ url_for('edit', vendor_code=good.vendor_code) }}">Редактировать</a>
-        <a class="btn btn-danger" href="{{ url_for('remove', vendor_code=good.vendor_code) }}">Удалить объявление</a>
+
     </div>
     </div>
     </div>

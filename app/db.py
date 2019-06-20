@@ -164,3 +164,9 @@ def edit_by_vendor_code(connection, vendor_code, category, breed, gender, birthd
              'name': name, 'price': price, 'description': description})
         connection.commit()
 
+def all_ads_for_user(connection, username):
+    with connection:
+        cursor = connection.cursor()
+        result = cursor.execute("""
+        SELECT * FROM goods WHERE author_id = :username LIMIT 20""", {'username': username}).fetchall()
+        return result

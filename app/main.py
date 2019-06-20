@@ -53,11 +53,16 @@ def start():
     @app.route('/', methods=('GET', 'POST'))
     def all_pets():
         search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
         if search:
             search_result = db.search_goods(db.open_db(db_url), search)
             return render_template('index.html', goods=search_result, search=search, active_index='all_pets')
         all_pets_result = db.all_pets(db.open_db(db_url))
-        return render_template('index.html', goods=all_pets_result, active_index='all_pets')
+        return render_template('index.html', goods=all_pets_result, active_index='all_pets', user_login=user_login)
 
     @app.route('/dogs', methods=('GET', 'POST'))
     def dogs():
@@ -81,24 +86,28 @@ def start():
 
     @app.route('/new_pet', methods=('GET', 'POST'))
     def new_pet():
-        if request.method == 'GET':
+        if 'id' in session and session['id'] is not None:
+            if request.method == 'GET':
+                return render_template('new_pet.html')
+
+            if request.method == 'POST':
+                vendor_code = request.form['vendor_code']
+                category = request.form['category']
+                breed = request.form['breed']
+                gender = request.form['gender']
+                birthdate = request.form['birthdate']
+                name = request.form['name']
+                price = int(request.form['price'])
+                description = request.form['description']
+
+                db.create_new_pet(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price,
+                                  description)
+                return redirect(url_for('all_pets'))
+
             return render_template('new_pet.html')
 
-        if request.method == 'POST':
-            vendor_code = request.form['vendor_code']
-            category = request.form['category']
-            breed = request.form['breed']
-            gender = request.form['gender']
-            birthdate = request.form['birthdate']
-            name = request.form['name']
-            price = int(request.form['price'])
-            description = request.form['description']
-
-            db.create_new_pet(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price,
-                              description)
-            return redirect(url_for('all_pets'))
-
-        return render_template('new_pet.html')
+        else:
+            return redirect(url_for('login'))
 
     @app.route("/remove/<vendor_code>", methods=['GET', 'POST'])
     def remove(vendor_code):

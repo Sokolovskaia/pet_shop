@@ -11,6 +11,7 @@
     <title>Зоомагазин</title>
 </head>
 <body>
+
 <div class="container">
 <div class="row">
     <div class="col-sm-15">
@@ -65,13 +66,15 @@
             </li>
 
             <li class="nav-item">
+
+                 {% if user_login == 0 %}
                 <a href="{{ url_for('login') }}" class="nav-link">
-                    {% if active_index == 'login' %}
-                    <h4> Войти </h4>
-                    {% else %}
-                    Войти
+                    Войти</a>
+                 {% else %}
+                <a href="{{ url_for('account') }}" class="nav-link">
+                    {{ user_login }}</a>
                     {% endif %}
-                </a>
+
             </li>
 
         </ul>

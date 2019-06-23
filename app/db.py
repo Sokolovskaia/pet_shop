@@ -127,14 +127,14 @@ def search_goods(connection, search):
         return result
 
 
-def create_new_pet(connection, vendor_code, category, breed, gender, birthdate, name, price, description ):
+def create_new_pet(connection, vendor_code, category, breed, gender, birthdate, name, price, photo, description, author_id):
     with connection:
         cursor = connection.cursor()
         cursor.execute(
-            '''INSERT INTO goods (vendor_code, category, breed, gender, birthdate, name, price, description) 
-               VALUES (:vendor_code, :category, :breed, :gender, :birthdate, :name, :price, :description)''',
+            '''INSERT INTO goods (vendor_code, category, breed, gender, birthdate, name, price, photo, description, author_id) 
+               VALUES (:vendor_code, :category, :breed, :gender, :birthdate, :name, :price, :photo, :description, :author_id)''',
             {'vendor_code': vendor_code, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
-             'name': name, 'price': price, 'description': description})
+             'name': name, 'price': price, 'photo': photo, 'description': description, 'author_id': author_id})
         connection.commit()
 
 def remove_by_vendor_code(connection, vendor_code):

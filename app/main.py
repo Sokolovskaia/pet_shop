@@ -6,11 +6,26 @@ from app import db
 
 import os
 
+from werkzeug.utils import secure_filename
+
+
 from app.db import validate_user
+
+
+UPLOAD_FOLDER = 'app/static'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 def start():
     app = Flask(__name__)
+    app.config['uploads'] = UPLOAD_FOLDER
+
     app.config.from_mapping(
         SECRET_KEY='Marina_secret_key',
     )
@@ -91,6 +106,7 @@ def start():
                 return render_template('new_pet.html')
 
             if request.method == 'POST':
+
                 vendor_code = request.form['vendor_code']
                 category = request.form['category']
                 breed = request.form['breed']
@@ -98,16 +114,24 @@ def start():
                 birthdate = request.form['birthdate']
                 name = request.form['name']
                 price = int(request.form['price'])
+                file = request.files['file']
+                if file and allowed_file(file.filename):
+                    photo = secure_filename(file.filename)
+                    file.save(os.path.join(app.config['uploads'], photo))
                 description = request.form['description']
-
-                db.create_new_pet(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price,
-                                  description)
+                author_id = session['id']
+                db.create_new_pet(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price, photo,
+                                  description, author_id)
                 return redirect(url_for('all_pets'))
 
             return render_template('new_pet.html')
 
         else:
             return redirect(url_for('login'))
+
+
+
+
 
     @app.route("/remove/<vendor_code>", methods=['GET', 'POST'])
     def remove(vendor_code):

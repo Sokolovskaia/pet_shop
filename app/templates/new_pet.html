@@ -14,7 +14,7 @@
 <div class="container">
     <p class="h2 text-center font-weight-bold">Введите данные животного</p>
 
-    <form class="form-group" action="{{ url_for('new_pet') }}" method="post">
+    <form class="form-group" action="{{ url_for('new_pet') }}" method="post" enctype=multipart/form-data>
         <div class="form-group">
             <label for="vendor_code">Артикул</label>
             <input class="form-control" name="vendor_code" placeholder="111111" required>
@@ -27,7 +27,7 @@
 
         <div class="form-group">
             <label for="breed">Порода</label>
-            <input class="form-control" name="breed" placeholder="Овчарка" required>
+            <input class="form-control" name="breed" placeholder="Овчарка">
         </div>
 
 
@@ -43,13 +43,13 @@
 
         <div class="form-group">
             <label for="birthdate">Дата рождения</label>
-            <input class="form-control" name="birthdate" placeholder="10.2015" required>
+            <input class="form-control" name="birthdate" placeholder="10.2015">
         </div>
 
 
         <div class="form-group">
             <label for="name">Имя</label>
-            <input class="form-control" name="name" placeholder="Дружок" required>
+            <input class="form-control" name="name" placeholder="Дружок">
         </div>
 
 
@@ -58,10 +58,22 @@
             <input class="form-control" name="price" placeholder="100" required>
         </div>
 
+
+        <div class="form-group">
+            <label for="photo">Фото</label>
+            <input type=file name=file value=Upload placeholder="Фото">
+        </div>
+
         <div class="form-group">
             <label for="description">Описание</label>
-            <input class="form-control" name="description" placeholder="Умный, верный" required>
+            <input class="form-control" name="description" placeholder="Умный, верный">
         </div>
+
+
+
+
+
+
 
 
 

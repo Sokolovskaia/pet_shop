@@ -93,7 +93,13 @@
         <div class="card-columns" style="max-width: 900px;">
             {% for good in goods %}
             <div class="card">
+                {% if good.photo %}
                 <img src="/static/{{ good.photo }}" class="card-img-top" alt="Ваш будущий четвероногий друг">
+
+                {% else %}
+                <img src="/static/7.jpg" class="card-img-top" alt="Ваш будущий четвероногий друг">
+                {% endif %}
+
                 <div class="card-body">
                     <h5 class="card-title">{{ good.category }} </h5>
                     <p class="card-text"> Чудесный друг {{ good.name }} породы {{ good.breed }} ждет новых хозяев

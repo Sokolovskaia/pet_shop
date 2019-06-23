@@ -14,7 +14,7 @@
 <div class="container">
     <p class="h2 text-center font-weight-bold">Введите новые данные</p>
 
-    <form class="form-group" action="{{ url_for('edit', vendor_code=pet.vendor_code) }}" method="post">
+    <form class="form-group" action="{{ url_for('edit', vendor_code=pet.vendor_code) }}" method="post" enctype=multipart/form-data>
         <div class="form-group">
             <label for="vendor_code">Артикул</label>
             <input class="form-control" name="vendor_code" value="{{ pet.vendor_code }}" placeholder="111111" required>
@@ -53,6 +53,15 @@
             <label for="price">Цена, руб.</label>
             <input class="form-control" name="price" value="{{ pet.price }}" placeholder="1000" required>
         </div>
+
+
+        <div class="form-group">
+            <label for="photo">Фото</label>
+            <img src="/static/{{ pet.photo }}" style="max-width: 200px;">
+
+            <input type=file name=file value="{{ pet.photo }}" placeholder="Фото">
+        </div>
+
 
         <div class="form-group">
             <label for="description">Описание</label>

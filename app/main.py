@@ -62,7 +62,8 @@ def start():
         user_name = session['name']
         user_phone_number = session['phone_number']
         ads_for_user = db.all_ads_for_user(db.open_db(db_url), username)
-        return render_template('account.html', ads_for_user=ads_for_user, user_id=username, user_login=user_login, user_surname=user_surname,
+        number_of_ads_for_user = db.number_of_ads(db.open_db(db_url), username)
+        return render_template('account.html', ads_for_user=ads_for_user, number_of_ads_for_user=number_of_ads_for_user, user_id=username, user_login=user_login, user_surname=user_surname,
                            user_name=user_name, user_phone_number=user_phone_number, active_index='account')
 
     @app.route('/', methods=('GET', 'POST'))
@@ -155,8 +156,12 @@ def start():
             birthdate = request.form['birthdate']
             name = request.form['name']
             price = int(request.form['price'])
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                photo = secure_filename(file.filename)
+                file.save(os.path.join(app.config['uploads'], photo))
             description = request.form['description']
-            db.edit_by_vendor_code(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price,
+            db.edit_by_vendor_code(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price, photo,
                                    description)
             return redirect(url_for('all_pets', vendor_code=vendor_code))
 

@@ -91,21 +91,21 @@
 
 
         <div class="card-columns" style="max-width: 900px;">
-            {% for good in goods %}
+            {% for pet in pets %}
             <div class="card">
-                {% if good.photo %}
-                <img src="/static/{{ good.photo }}" class="card-img-top" alt="Ваш будущий четвероногий друг">
+                {% if pet.photo %}
+                <img src="/static/{{ pet.photo }}" class="card-img-top" alt="Ваш будущий четвероногий друг">
 
                 {% else %}
                 <img src="/static/7.jpg" class="card-img-top" alt="Ваш будущий четвероногий друг">
                 {% endif %}
 
                 <div class="card-body">
-                    <h5 class="card-title">{{ good.category }} </h5>
-                    <p class="card-text"> Чудесный друг {{ good.name }} породы {{ good.breed }} ждет новых хозяев
+                    <h5 class="card-title">{{ pet.category }} </h5>
+                    <p class="card-text"> Чудесный друг {{ pet.name }} породы {{ pet.breed }} ждет новых хозяев
                     </p>
                     <div class="card-footer">
-                        <small class="text-muted"><a href="{{ url_for('details', vendor_code=good.vendor_code) }}">
+                        <small class="text-muted"><a href="{{ url_for('details', vendor_code=pet.vendor_code) }}">
                             Подробнее </a></small>
                     </div>
                 </div>

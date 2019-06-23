@@ -7,32 +7,32 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Редактировать объявление с артикулом: {{ good.vendor_code }})</title>
+    <title>Редактировать объявление с артикулом: {{ pet.vendor_code }})</title>
 </head>
 <body>
 
 <div class="container">
     <p class="h2 text-center font-weight-bold">Введите новые данные</p>
 
-    <form class="form-group" action="{{ url_for('edit', vendor_code=good.vendor_code) }}" method="post">
+    <form class="form-group" action="{{ url_for('edit', vendor_code=pet.vendor_code) }}" method="post">
         <div class="form-group">
             <label for="vendor_code">Артикул</label>
-            <input class="form-control" name="vendor_code" value="{{ good.vendor_code }}" placeholder="111111" required>
+            <input class="form-control" name="vendor_code" value="{{ pet.vendor_code }}" placeholder="111111" required>
         </div>
 
         <div class="form-group">
             <label for="category">Категория</label>
-            <input class="form-control" name="category" value="{{ good.category }}" placeholder="Собака" required>
+            <input class="form-control" name="category" value="{{ pet.category }}" placeholder="Собака" required>
         </div>
 
         <div class="form-group">
             <label for="breed">Порода</label>
-            <input class="form-control" name="breed" value="{{ good.breed }}" placeholder="Овчарка" required>
+            <input class="form-control" name="breed" value="{{ pet.breed }}" placeholder="Овчарка" required>
         </div>
 
         <div class="form-group">
             <label for="gender">Пол (М/Ж)</label>
-            <input class="form-control" name="gender" value="{{ good.gender }}" placeholder="М" required>
+            <input class="form-control" name="gender" value="{{ pet.gender }}" placeholder="М" required>
         </div>
 
 
@@ -40,23 +40,23 @@
 
         <div class="form-group">
             <label for="birthdate">Дата рождения</label>
-            <input class="form-control" name="birthdate" value="{{ good.birthdate }}" placeholder="10.2015" required>
+            <input class="form-control" name="birthdate" value="{{ pet.birthdate }}" placeholder="10.2015" required>
         </div>
 
         <div class="form-group">
             <label for="name">Кличка</label>
-            <input class="form-control" name="name" value="{{ good.name }}" placeholder="Жучка" required>
+            <input class="form-control" name="name" value="{{ pet.name }}" placeholder="Жучка" required>
         </div>
 
 
         <div class="form-group">
             <label for="price">Цена, руб.</label>
-            <input class="form-control" name="price" value="{{ good.price }}" placeholder="1000" required>
+            <input class="form-control" name="price" value="{{ pet.price }}" placeholder="1000" required>
         </div>
 
         <div class="form-group">
             <label for="description">Описание</label>
-            <input class="form-control" name="description" value="{{ good.description }}"
+            <input class="form-control" name="description" value="{{ pet.description }}"
                    placeholder="Красивый, послушный" required>
         </div>
 

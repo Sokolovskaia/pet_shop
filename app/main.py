@@ -74,30 +74,30 @@ def start():
             user_login = 0
 
         if search:
-            search_result = db.search_goods(db.open_db(db_url), search)
-            return render_template('index.html', goods=search_result, search=search, active_index='all_pets')
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets')
         all_pets_result = db.all_pets(db.open_db(db_url))
-        return render_template('index.html', goods=all_pets_result, active_index='all_pets', user_login=user_login)
+        return render_template('index.html', pets=all_pets_result, active_index='all_pets', user_login=user_login)
 
     @app.route('/dogs', methods=('GET', 'POST'))
     def dogs():
         dogs_result = db.dogs(db.open_db(db_url))
-        return render_template('index.html', goods=dogs_result, active_index='dogs')
+        return render_template('index.html', pets=dogs_result, active_index='dogs')
 
     @app.route('/cats', methods=('GET', 'POST'))
     def cats():
         cats_result = db.cats(db.open_db(db_url))
-        return render_template('index.html', goods=cats_result, active_index='cats')
+        return render_template('index.html', pets=cats_result, active_index='cats')
 
     @app.route('/another_pets', methods=('GET', 'POST'))
     def another_pets():
         another_pets_result = db.another_pets(db.open_db(db_url))
-        return render_template('index.html', goods=another_pets_result, active_index='another_pets')
+        return render_template('index.html', pets=another_pets_result, active_index='another_pets')
 
     @app.route("/details/<vendor_code>", methods=('GET', 'POST'))
     def details(vendor_code):
         search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
-        return render_template('details.html', good=search_by_vendor_code_result)
+        return render_template('details.html', pet=search_by_vendor_code_result)
 
     @app.route('/new_pet', methods=('GET', 'POST'))
     def new_pet():
@@ -137,7 +137,7 @@ def start():
     def remove(vendor_code):
         if request.method == 'GET':
             search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
-            return render_template('remove.html', good=search_by_vendor_code_result)
+            return render_template('remove.html', pet=search_by_vendor_code_result)
         if request.method == 'POST':
             db.remove_by_vendor_code(db.open_db(db_url), vendor_code)
             return redirect(url_for('all_pets'))
@@ -146,7 +146,7 @@ def start():
     def edit(vendor_code):
         if request.method == 'GET':
             search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
-            return render_template('edit.html', good=search_by_vendor_code_result)
+            return render_template('edit.html', pet=search_by_vendor_code_result)
 
         if request.method == 'POST':
             category = request.form['category']

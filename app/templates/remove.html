@@ -15,8 +15,8 @@
 
     </p>
 <h2>Вы уверены, что хотите удалить объявление:
-    <p>{{ good.category }} породы {{ good.breed }} по кличке: {{ good.name }} ( Артикул: {{ good.vendor_code }})?</p></h2>
-<form action="{{ url_for('remove', vendor_code=good.vendor_code) }}" method="post">
+    <p>{{ pet.category }} породы {{ pet.breed }} по кличке: {{ pet.name }} ( Артикул: {{ pet.vendor_code }})?</p></h2>
+<form action="{{ url_for('remove', vendor_code=pet.vendor_code) }}" method="post">
     <button type="submit" class="btn btn-danger">Удалить</button>
 
 </form>

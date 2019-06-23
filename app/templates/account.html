@@ -47,23 +47,23 @@
         <div class="col">
 
 <p class="h3 text-left font-bold" style="color:#563d7c">Ваши объявления:</p>
-            {% for good in ads_for_user %}
+            {% for pet in ads_for_user %}
 
 <div class="card" style="width: 18rem;">
 
-    {% if good.photo %}
-     <img src="/static/{{ good.photo }}" class="card-img-top" alt="...">
+    {% if pet.photo %}
+     <img src="/static/{{ pet.photo }}" class="card-img-top" alt="...">
     {% else %}
   <img src="/static/7.jpg" class="card-img-top" alt="...">
     {% endif %}
 
   <div class="card-body">
-    <h5 class="card-title">{{ good.category }} породы {{ good.breed }}</h5>
-    <p class="card-text">Цена: {{ good.price }} руб. </p>
-    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('edit', vendor_code=good.vendor_code) }}">Редактировать</a></p>
-    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('remove', vendor_code=good.vendor_code) }}">Удалить объявление</a></p>
+    <h5 class="card-title">{{ pet.category }} породы {{ pet.breed }}</h5>
+    <p class="card-text">Цена: {{ pet.price }} руб. </p>
+    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('edit', vendor_code=pet.vendor_code) }}">Редактировать</a></p>
+    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('remove', vendor_code=pet.vendor_code) }}">Удалить объявление</a></p>
 
-    <a href="{{ url_for('details', vendor_code=good.vendor_code) }}" class="btn btn-primary">Подробнее</a>
+    <a href="{{ url_for('details', vendor_code=pet.vendor_code) }}" class="btn btn-primary">Подробнее</a>
   </div>
 </div>
 

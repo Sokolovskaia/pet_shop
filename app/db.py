@@ -8,11 +8,11 @@ def open_db(url):
     return connection
 
 
-def create_table_goods(connection):
+def create_table_pets(connection):
     with connection:
         cursor = connection.cursor()
         cursor.execute("""
-        CREATE TABLE IF NOT EXISTS goods (
+        CREATE TABLE IF NOT EXISTS pets (
             vendor_code INTEGER PRIMARY KEY,
             category TEXT NOT NULL,
             breed TEXT,
@@ -21,7 +21,7 @@ def create_table_goods(connection):
             name TEXT,
             price INTEGER NOT NULL,
             presence INTEGER DEFAULT 0 CHECK (presence IN (1, 0)),
-            photo TEXT DEFAULT '7.jpg',
+            photo TEXT,
             description TEXT,
             author_id INTEGER NOT NULL,
             FOREIGN KEY (author_id) REFERENCES users (id)
@@ -73,14 +73,14 @@ def get_all(connection):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-        SELECT * FROM goods LIMIT 20""").fetchall()
+        SELECT * FROM pets LIMIT 20""").fetchall()
         return result
 
 def all_pets(connection):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-        SELECT * FROM goods WHERE category IN ('Собака', 'Кошка', 'Хомяк') LIMIT 20""").fetchall()
+        SELECT * FROM pets WHERE category IN ('Собака', 'Кошка', 'Хомяк') LIMIT 20""").fetchall()
         return result
 
 
@@ -88,7 +88,7 @@ def dogs(connection):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-        SELECT * FROM goods WHERE category =='Собака' LIMIT 20""").fetchall()
+        SELECT * FROM pets WHERE category =='Собака' LIMIT 20""").fetchall()
         return result
 
 
@@ -96,14 +96,14 @@ def cats(connection):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-        SELECT * FROM goods WHERE category =='Кошка' LIMIT 20""").fetchall()
+        SELECT * FROM pets WHERE category =='Кошка' LIMIT 20""").fetchall()
         return result
 
 def another_pets(connection):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-        SELECT * FROM goods WHERE category NOT IN ('Собака', 'Кошка') LIMIT 20""").fetchall()
+        SELECT * FROM pets WHERE category NOT IN ('Собака', 'Кошка') LIMIT 20""").fetchall()
         return result
 
 
@@ -111,18 +111,18 @@ def search_by_vendor_code(connection, vendor_code):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""SELECT * 
-                 FROM goods 
+                 FROM pets 
                 WHERE vendor_code = :vendor_code""",
             {'vendor_code': vendor_code}).fetchone()
         return result
 
 
-def search_goods(connection, search):
+def search_pets(connection, search):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
         SELECT *
-          FROM goods
+          FROM pets
          WHERE :search=vendor_code OR :search=breed OR :search=category OR :search=name LIMIT 20""", {'search': search}).fetchall()
         return result
 
@@ -131,7 +131,7 @@ def create_new_pet(connection, vendor_code, category, breed, gender, birthdate, 
     with connection:
         cursor = connection.cursor()
         cursor.execute(
-            '''INSERT INTO goods (vendor_code, category, breed, gender, birthdate, name, price, photo, description, author_id) 
+            '''INSERT INTO pets (vendor_code, category, breed, gender, birthdate, name, price, photo, description, author_id) 
                VALUES (:vendor_code, :category, :breed, :gender, :birthdate, :name, :price, :photo, :description, :author_id)''',
             {'vendor_code': vendor_code, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
              'name': name, 'price': price, 'photo': photo, 'description': description, 'author_id': author_id})
@@ -141,7 +141,7 @@ def remove_by_vendor_code(connection, vendor_code):
     with connection:
         cursor = connection.cursor()
         cursor.execute("""
-        DELETE FROM goods
+        DELETE FROM pets
               WHERE vendor_code = :vendor_code
         """, {'vendor_code': vendor_code})
         connection.commit()
@@ -151,7 +151,7 @@ def edit_by_vendor_code(connection, vendor_code, category, breed, gender, birthd
     with connection:
         cursor = connection.cursor()
         cursor.execute("""
-        UPDATE goods 
+        UPDATE pets 
            SET category = :category
              , breed = :breed
              , gender = :gender
@@ -168,5 +168,5 @@ def all_ads_for_user(connection, username):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-        SELECT * FROM goods WHERE author_id = :username LIMIT 20""", {'username': username}).fetchall()
+        SELECT * FROM pets WHERE author_id = :username LIMIT 20""", {'username': username}).fetchall()
         return result

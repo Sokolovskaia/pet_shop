@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Регистрация пользователя</title>
+</head>
+<body>
+<p class="h1 text-center font-weight-bold">Регистрация</p>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+
+<div class="container">
+    <p class="h2 text-center font-weight-bold">Введите информацию о вас</p>
+
+    <form class="form-group" action="{{ url_for('registration') }}" method="post">
+        <div class="form-group">
+            <label for="login">Логин</label>
+            <input class="form-control" name="login" placeholder="Vasya" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" class="form-control" name="password" placeholder="password" aria-describedby="passwordHelpBlock" required>
+        </div>
+
+
+        <div class="form-group">
+            <label for="surname">Фамилия</label>
+            <input class="form-control" name="surname" placeholder="Петров">
+        </div>
+
+        <div class="form-group">
+            <label for="name">Имя</label>
+            <input class="form-control" name="name" placeholder="Василий">
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Номер телефона</label>
+            <input class="form-control" name="phone_number" placeholder="7987123456">
+        </div>
+
+
+
+
+        <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+
+    </form>
+</div>
+
+
+
+
+</body>
+</html>

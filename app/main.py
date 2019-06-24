@@ -170,6 +170,37 @@ def start():
         return render_template('about.html')
 
 
+    @app.route('/registration', methods=('GET', 'POST'))
+    def registration():
+        if 'id' in session and session['id'] is not None:
+
+            return redirect(url_for('account'))
+
+        else:
+            if request.method == 'GET':
+                return render_template('registration.html')
+
+            if request.method == 'POST':
+                login = request.form['login']
+                password = request.form['password']
+                surname = request.form['surname']
+                name = request.form['name']
+                phone_number = request.form['phone_number']
+
+
+                db.create_new_user(db.open_db(db_url), login, password, surname, name, phone_number)
+
+
+                return redirect(url_for('login'))
+
+            return render_template('registration.html')
+
+
+
+
+
+
+
 
     if os.getenv('APP_ENV') == 'PROD' and os.getenv('PORT'):
         waitress.serve(app, port=os.getenv('PORT'))

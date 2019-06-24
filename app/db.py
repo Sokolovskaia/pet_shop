@@ -169,7 +169,8 @@ def create_new_pet(connection, vendor_code, category, breed, gender, birthdate, 
             '''INSERT INTO pets (
               vendor_code
             , category
-            , breed, gender
+            , breed
+            , gender
             , birthdate
             , name
             , price
@@ -237,3 +238,24 @@ def number_of_ads(connection, username):
              FROM pets 
             WHERE author_id = :username""", {'username': username}).fetchone()
         return result
+
+
+def create_new_user(connection, login, password, surname, name, phone_number):
+    with connection:
+        cursor = connection.cursor()
+        cursor.execute(
+            '''INSERT INTO users (
+              login
+            , password
+            , surname
+            , name
+            , phone_number
+           ) 
+               VALUES (
+                 :login
+               , :password
+               , :surname
+               , :name
+               , :phone_number)''',
+            {'login': login, 'password': password, 'surname': surname, 'name': name, 'phone_number': phone_number})
+        connection.commit()

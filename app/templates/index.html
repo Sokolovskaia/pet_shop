@@ -45,14 +45,20 @@
                 </a>
             </li>
 
+             <li class="nav-item">
+                <a href="{{ url_for('about') }}" class="nav-link">
+                    О нас
+                </a>
+            </li>
+
             <li class="nav-item">
 
                  {% if user_login == 0 %}
                 <a href="{{ url_for('login') }}" class="nav-link">
-                    Войти</a>
+                    <p class="text-success">Войти</p></a>
                  {% else %}
                 <a href="{{ url_for('account') }}" class="nav-link">
-                    {{ user_login }}</a>
+                    <h5 class="text-danger"> {{ user_login }}</h5></a>
                     {% endif %}
 
             </li>

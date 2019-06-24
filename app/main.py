@@ -165,6 +165,12 @@ def start():
                                    description)
             return redirect(url_for('all_pets', vendor_code=vendor_code))
 
+    @app.route('/about', methods=('GET', 'POST'))
+    def about():
+        return render_template('about.html')
+
+
+
     if os.getenv('APP_ENV') == 'PROD' and os.getenv('PORT'):
         waitress.serve(app, port=os.getenv('PORT'))
     else:

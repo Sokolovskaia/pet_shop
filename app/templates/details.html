@@ -16,7 +16,7 @@
 
     <p class="h3 text-center font-weight-bold">Подробнее о животном по имени {{ pet.name }}</p>
 
-<div class="card mb-3" style="max-width: 540px;">
+<div class="card mb-3" style="max-width: 640px;">
   <div class="row no-gutters">
     <div class="col-md-4">
         {% if pet.photo %}
@@ -27,7 +27,7 @@
 
 
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8-center">
       <div class="card-body">
         <h5 class="card-title">{{ pet.category }} породы {{ pet.breed }}</h5>
         <p class="card-text">Кличка: {{ pet.name }}</p>
@@ -35,6 +35,8 @@
         <p class="card-text">Дата рождения: {{ pet.birthdate }}</p>
         <p class="card-text">Цена: {{ pet.price }} руб.</p>
         <p class="card-text">Описание: {{ pet.description }} </p>
+        <h5 class="card-text"><small class="text-muted">Автор объявления: {{ pet.surname }} {{ pet.author_name }} </small></h5>
+        <h5 class="card-text"><small class="text-muted">Контактный номер телефона: +{{ pet.phone_number }}</small> </h5>
         <p class="card-text"><small class="text-muted">Номер объявления: {{ pet.vendor_code }} </small></p>
       </div>
     </div>

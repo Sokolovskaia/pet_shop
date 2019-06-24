@@ -128,9 +128,23 @@ def search_by_vendor_code(connection, vendor_code):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-        SELECT * 
-          FROM pets 
-         WHERE vendor_code = :vendor_code""", {'vendor_code': vendor_code}).fetchone()
+        SELECT p.vendor_code
+             , p.category
+             , p.breed
+             , p.gender
+             , p.birthdate
+             , p.name
+             , p.price
+             , p.photo
+             , p.description
+             , p.author_id
+             , u.surname
+             , u.name author_name
+             , u.phone_number
+          FROM pets p 
+     LEFT JOIN users u 
+            ON p.author_id = u.id
+         WHERE p.vendor_code = :vendor_code""", {'vendor_code': vendor_code}).fetchone()
         return result
 
 

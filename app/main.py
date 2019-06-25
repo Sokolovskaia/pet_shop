@@ -155,9 +155,21 @@ def start():
 
     @app.route("/details/<ad_id>", methods=('GET', 'POST'))
     def details(ad_id):
+        favor = 2
+
         search = request.args.get('search')
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
+
+            user = session['id']
+            is_favor = db.is_favorites(db.open_db(db_url), ad_id, user)
+            empty = []
+            if is_favor == empty:
+                favor = 0
+            else:
+                favor = 1
+
+
         else:
             user_login = 0
 
@@ -165,7 +177,9 @@ def start():
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
         search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
-        return render_template('details.html', pet=search_by_ad_id_result, user_login=user_login)
+
+
+        return render_template('details.html', pet=search_by_ad_id_result, user_login=user_login, favor=favor)
 
     @app.route('/new_pet', methods=('GET', 'POST'))
     def new_pet():
@@ -321,12 +335,14 @@ def start():
                 empty = []
                 if is_favor == empty:
                     db.add_to_favorites(db.open_db(db_url), ad_id, user)
-                    return redirect(url_for('details', ad_id=ad_id))
+                    favor = 1
+                    return redirect(url_for('details', ad_id=ad_id, favor=favor))
                 else:
-                    for result in is_favor:
+                    for res in is_favor:
                         id = res['id']
                         db.remove_from_favorites(db.open_db(db_url), id)
-                        return redirect(url_for('details', ad_id=ad_id))
+                        favor = 0
+                        return redirect(url_for('details', ad_id=ad_id, favor=favor))
 
 
         else:

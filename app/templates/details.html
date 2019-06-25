@@ -78,7 +78,17 @@
         <p class="card-text"><small class="text-muted">Номер объявления: {{ pet.ad_id }} </small></p>
 
 <form action="{{ url_for('fav', ad_id=pet.ad_id) }}" method="post">
+
+  {% if favor == 0  %}
+
     <button type="submit" class="btn btn-warning">Добавить в избранное</button>
+
+  {% elif favor == 1 %}
+
+      <button type="submit" class="btn btn-warning">Удалить из избранного</button>
+
+  {% endif %}
+
 </form>
 
 

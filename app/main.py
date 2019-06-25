@@ -23,6 +23,9 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
+
+
+
 def start():
     app = Flask(__name__)
     app.config['uploads'] = UPLOAD_FOLDER
@@ -33,9 +36,20 @@ def start():
     db_url = 'db.sqlite'
 
 
-
     @app.route('/login', methods=('GET', 'POST'))
     def login():
+        search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
+                                   user_login=user_login)
+
+
         if request.method == 'POST':
             login = request.form['login']
             password = request.form['password']
@@ -53,7 +67,7 @@ def start():
 
             flash(val['error'])
 
-        return render_template('login.html')
+        return render_template('login.html', user_login=user_login)
 
     @app.route('/logout')
     def logout():
@@ -72,6 +86,13 @@ def start():
         user_phone_number = session['phone_number']
         ads_for_user = db.all_ads_for_user(db.open_db(db_url), username)
         number_of_ads_for_user = db.number_of_ads(db.open_db(db_url), username)
+
+        search = request.args.get('search')
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
+                                   user_login=user_login)
+
         return render_template('account.html', ads_for_user=ads_for_user, number_of_ads_for_user=number_of_ads_for_user, user_id=username, user_login=user_login, user_surname=user_surname,
                            user_name=user_name, user_phone_number=user_phone_number, active_index='account')
 
@@ -85,35 +106,83 @@ def start():
 
         if search:
             search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets')
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
         all_pets_result = db.all_pets(db.open_db(db_url))
         return render_template('index.html', pets=all_pets_result, active_index='all_pets', user_login=user_login)
 
+
     @app.route('/dogs', methods=('GET', 'POST'))
     def dogs():
+        search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
         dogs_result = db.dogs(db.open_db(db_url))
-        return render_template('index.html', pets=dogs_result, active_index='dogs')
+        return render_template('index.html', pets=dogs_result, active_index='dogs', user_login=user_login)
 
     @app.route('/cats', methods=('GET', 'POST'))
     def cats():
+        search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
         cats_result = db.cats(db.open_db(db_url))
-        return render_template('index.html', pets=cats_result, active_index='cats')
+        return render_template('index.html', pets=cats_result, active_index='cats', user_login=user_login)
 
     @app.route('/another_pets', methods=('GET', 'POST'))
     def another_pets():
+        search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
         another_pets_result = db.another_pets(db.open_db(db_url))
-        return render_template('index.html', pets=another_pets_result, active_index='another_pets')
+        return render_template('index.html', pets=another_pets_result, active_index='another_pets', user_login=user_login)
 
     @app.route("/details/<vendor_code>", methods=('GET', 'POST'))
     def details(vendor_code):
+        search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
         search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
-        return render_template('details.html', pet=search_by_vendor_code_result)
+        return render_template('details.html', pet=search_by_vendor_code_result, user_login=user_login)
 
     @app.route('/new_pet', methods=('GET', 'POST'))
     def new_pet():
+        search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
+
+
         if 'id' in session and session['id'] is not None:
             if request.method == 'GET':
-                return render_template('new_pet.html')
+                return render_template('new_pet.html', user_login=user_login)
 
             if request.method == 'POST':
 
@@ -145,18 +214,40 @@ def start():
 
     @app.route("/remove/<vendor_code>", methods=['GET', 'POST'])
     def remove(vendor_code):
+        search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
+                                   user_login=user_login)
+
+
         if request.method == 'GET':
             search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
-            return render_template('remove.html', pet=search_by_vendor_code_result)
+            return render_template('remove.html', pet=search_by_vendor_code_result, user_login=user_login)
         if request.method == 'POST':
             db.remove_by_vendor_code(db.open_db(db_url), vendor_code)
             return redirect(url_for('all_pets'))
 
     @app.route("/edit/<vendor_code>", methods=['GET', 'POST'])
     def edit(vendor_code):
+        search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
+
         if request.method == 'GET':
             search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
-            return render_template('edit.html', pet=search_by_vendor_code_result)
+            return render_template('edit.html', pet=search_by_vendor_code_result, user_login=user_login)
 
         if request.method == 'POST':
             category = request.form['category']
@@ -176,17 +267,36 @@ def start():
 
     @app.route('/about', methods=('GET', 'POST'))
     def about():
-        return render_template('about.html')
+        search = request.args.get('search')
+        if 'id' in session and session['id'] is not None:
+            user_login = session['login']
+        else:
+            user_login = 0
+
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
+                                   user_login=user_login)
+
+        return render_template('about.html', user_login=user_login)
 
 
     @app.route('/registration', methods=('GET', 'POST'))
     def registration():
+        search = request.args.get('search')
+        user_login = 0
+        if search:
+            search_result = db.search_pets(db.open_db(db_url), search)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
+                                   user_login=user_login)
+
+
         if 'id' in session and session['id'] is not None:
             return redirect(url_for('account'))
 
         else:
             if request.method == 'GET':
-                return render_template('registration.html')
+                return render_template('registration.html', user_login=user_login)
 
             if request.method == 'POST':
                 login_verification = {'success': False}

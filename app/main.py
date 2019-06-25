@@ -185,8 +185,6 @@ def start():
                 return render_template('new_pet.html', user_login=user_login)
 
             if request.method == 'POST':
-
-                ad_id = request.form['ad_id']
                 category = request.form['category']
                 breed = request.form['breed']
                 gender = request.form['gender']
@@ -199,7 +197,7 @@ def start():
                     file.save(os.path.join(app.config['uploads'], photo))
                 description = request.form['description']
                 author_id = session['id']
-                db.create_new_pet(db.open_db(db_url), ad_id, category, breed, gender, birthdate, name, price, photo,
+                db.create_new_pet(db.open_db(db_url), category, breed, gender, birthdate, name, price, photo,
                                   description, author_id)
                 return redirect(url_for('all_pets'))
 

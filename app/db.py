@@ -162,13 +162,12 @@ def search_pets(connection, search):
         return result
 
 
-def create_new_pet(connection, ad_id, category, breed, gender, birthdate, name, price, photo, description, author_id):
+def create_new_pet(connection, category, breed, gender, birthdate, name, price, photo, description, author_id):
     with connection:
         cursor = connection.cursor()
         cursor.execute(
             '''INSERT INTO pets (
-              ad_id
-            , category
+              category
             , breed
             , gender
             , birthdate
@@ -178,8 +177,7 @@ def create_new_pet(connection, ad_id, category, breed, gender, birthdate, name, 
             , description
             , author_id) 
                VALUES (
-                 :ad_id
-               , :category
+                 :category
                , :breed
                , :gender
                , :birthdate
@@ -188,7 +186,7 @@ def create_new_pet(connection, ad_id, category, breed, gender, birthdate, name, 
                , :photo
                , :description
                , :author_id)''',
-            {'ad_id': ad_id, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
+            {'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
              'name': name, 'price': price, 'photo': photo, 'description': description, 'author_id': author_id})
         connection.commit()
 

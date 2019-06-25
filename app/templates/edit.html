@@ -10,10 +10,6 @@
     <p class="h2 text-center font-weight-bold">Введите новые данные</p>
 
     <form class="form-group" action="{{ url_for('edit', ad_id=pet.ad_id) }}" method="post" enctype=multipart/form-data>
-        <div class="form-group">
-            <label for="ad_id">Номер объявления</label>
-            <input class="form-control" name="ad_id" value="{{ pet.ad_id }}" placeholder="111111" required>
-        </div>
 
         <div class="form-group">
             <label for="category">Категория</label>

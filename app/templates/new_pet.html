@@ -12,10 +12,6 @@
     <p class="h2 text-center font-weight-bold">Введите данные животного</p>
 
     <form class="form-group" action="{{ url_for('new_pet') }}" method="post" enctype=multipart/form-data>
-        <div class="form-group">
-            <label for="ad_id">Артикул</label>
-            <input class="form-control" name="ad_id" placeholder="111111" required>
-        </div>
 
         <div class="form-group">
             <label for="category">Наименование категории</label>

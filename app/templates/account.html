@@ -49,10 +49,10 @@
   <div class="card-body">
     <h5 class="card-title">{{ pet.category }} породы {{ pet.breed }}</h5>
     <p class="card-text">Цена: {{ pet.price }} руб. </p>
-    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('edit', vendor_code=pet.vendor_code) }}">Редактировать</a></p>
-    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('remove', vendor_code=pet.vendor_code) }}">Удалить объявление</a></p>
+    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('edit', ad_id=pet.ad_id) }}">Редактировать</a></p>
+    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('remove', ad_id=pet.ad_id) }}">Удалить объявление</a></p>
 
-    <a href="{{ url_for('details', vendor_code=pet.vendor_code) }}" class="btn btn-primary">Подробнее</a>
+    <a href="{{ url_for('details', ad_id=pet.ad_id) }}" class="btn btn-primary">Подробнее</a>
   </div>
 </div>
 

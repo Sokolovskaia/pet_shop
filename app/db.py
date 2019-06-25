@@ -13,7 +13,7 @@ def create_table_pets(connection):
         cursor = connection.cursor()
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS pets (
-            vendor_code INTEGER PRIMARY KEY
+            ad_id INTEGER PRIMARY KEY AUTOINCREMENT
           , category TEXT NOT NULL
           , breed TEXT
           , gender TEXT
@@ -124,11 +124,11 @@ def another_pets(connection):
         return result
 
 
-def search_by_vendor_code(connection, vendor_code):
+def search_by_ad_id(connection, ad_id):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-        SELECT p.vendor_code
+        SELECT p.ad_id
              , p.category
              , p.breed
              , p.gender
@@ -144,7 +144,7 @@ def search_by_vendor_code(connection, vendor_code):
           FROM pets p 
      LEFT JOIN users u 
             ON p.author_id = u.id
-         WHERE p.vendor_code = :vendor_code""", {'vendor_code': vendor_code}).fetchone()
+         WHERE p.ad_id = :ad_id""", {'ad_id': ad_id}).fetchone()
         return result
 
 
@@ -154,7 +154,7 @@ def search_pets(connection, search):
         result = cursor.execute("""
         SELECT *
           FROM pets
-         WHERE :search=vendor_code 
+         WHERE :search=ad_id 
             OR :search=breed 
             OR :search=category 
             OR :search=name 
@@ -162,12 +162,12 @@ def search_pets(connection, search):
         return result
 
 
-def create_new_pet(connection, vendor_code, category, breed, gender, birthdate, name, price, photo, description, author_id):
+def create_new_pet(connection, ad_id, category, breed, gender, birthdate, name, price, photo, description, author_id):
     with connection:
         cursor = connection.cursor()
         cursor.execute(
             '''INSERT INTO pets (
-              vendor_code
+              ad_id
             , category
             , breed
             , gender
@@ -178,7 +178,7 @@ def create_new_pet(connection, vendor_code, category, breed, gender, birthdate, 
             , description
             , author_id) 
                VALUES (
-                 :vendor_code
+                 :ad_id
                , :category
                , :breed
                , :gender
@@ -188,21 +188,21 @@ def create_new_pet(connection, vendor_code, category, breed, gender, birthdate, 
                , :photo
                , :description
                , :author_id)''',
-            {'vendor_code': vendor_code, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
+            {'ad_id': ad_id, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
              'name': name, 'price': price, 'photo': photo, 'description': description, 'author_id': author_id})
         connection.commit()
 
-def remove_by_vendor_code(connection, vendor_code):
+def remove_by_ad_id(connection, ad_id):
     with connection:
         cursor = connection.cursor()
         cursor.execute("""
         DELETE FROM pets
-              WHERE vendor_code = :vendor_code
-        """, {'vendor_code': vendor_code})
+              WHERE ad_id = :ad_id
+        """, {'ad_id': ad_id})
         connection.commit()
 
 
-def edit_by_vendor_code(connection, vendor_code, category, breed, gender, birthdate, name, price, photo, description):
+def edit_by_ad_id(connection, ad_id, category, breed, gender, birthdate, name, price, photo, description):
     with connection:
         cursor = connection.cursor()
         cursor.execute("""
@@ -215,8 +215,8 @@ def edit_by_vendor_code(connection, vendor_code, category, breed, gender, birthd
              , price = :price
              , photo = :photo
              , description = :description
-         WHERE vendor_code = :vendor_code
-        """, {'vendor_code': vendor_code, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
+         WHERE ad_id = :ad_id
+        """, {'ad_id': ad_id, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
              'name': name, 'price': price, 'photo': photo, 'description': description})
         connection.commit()
 
@@ -234,7 +234,7 @@ def number_of_ads(connection, username):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-           SELECT COUNT(vendor_code) ads
+           SELECT COUNT(ad_id) ads
              FROM pets 
             WHERE author_id = :username""", {'username': username}).fetchone()
         return result

@@ -2,17 +2,17 @@
 
 
 {% block title %}
-Редактировать объявление с номером: {{ pet.vendor_code }})
+Редактировать объявление с номером: {{ pet.ad_id }})
 {% endblock %}
 
     {% block body %}
 
     <p class="h2 text-center font-weight-bold">Введите новые данные</p>
 
-    <form class="form-group" action="{{ url_for('edit', vendor_code=pet.vendor_code) }}" method="post" enctype=multipart/form-data>
+    <form class="form-group" action="{{ url_for('edit', ad_id=pet.ad_id) }}" method="post" enctype=multipart/form-data>
         <div class="form-group">
-            <label for="vendor_code">Артикул</label>
-            <input class="form-control" name="vendor_code" value="{{ pet.vendor_code }}" placeholder="111111" required>
+            <label for="ad_id">Номер объявления</label>
+            <input class="form-control" name="ad_id" value="{{ pet.ad_id }}" placeholder="111111" required>
         </div>
 
         <div class="form-group">

@@ -2,7 +2,7 @@
 
 
 {% block title %}
-Артикул: {{pet.vendor_code}}
+Артикул: {{pet.ad_id}}
 {% endblock %}
 
 
@@ -75,7 +75,7 @@
         <p class="card-text">Описание: {{ pet.description }} </p>
         <h5 class="card-text"><small class="text-muted">Автор объявления: {{ pet.surname }} {{ pet.author_name }} </small></h5>
         <h5 class="card-text"><small class="text-muted">Контактный номер телефона: +{{ pet.phone_number }}</small> </h5>
-        <p class="card-text"><small class="text-muted">Номер объявления: {{ pet.vendor_code }} </small></p>
+        <p class="card-text"><small class="text-muted">Номер объявления: {{ pet.ad_id }} </small></p>
       </div>
     </div>
   </div>

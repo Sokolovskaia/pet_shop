@@ -153,8 +153,8 @@ def start():
         another_pets_result = db.another_pets(db.open_db(db_url))
         return render_template('index.html', pets=another_pets_result, active_index='another_pets', user_login=user_login)
 
-    @app.route("/details/<vendor_code>", methods=('GET', 'POST'))
-    def details(vendor_code):
+    @app.route("/details/<ad_id>", methods=('GET', 'POST'))
+    def details(ad_id):
         search = request.args.get('search')
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
@@ -164,8 +164,8 @@ def start():
         if search:
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
-        search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
-        return render_template('details.html', pet=search_by_vendor_code_result, user_login=user_login)
+        search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
+        return render_template('details.html', pet=search_by_ad_id_result, user_login=user_login)
 
     @app.route('/new_pet', methods=('GET', 'POST'))
     def new_pet():
@@ -186,7 +186,7 @@ def start():
 
             if request.method == 'POST':
 
-                vendor_code = request.form['vendor_code']
+                ad_id = request.form['ad_id']
                 category = request.form['category']
                 breed = request.form['breed']
                 gender = request.form['gender']
@@ -199,7 +199,7 @@ def start():
                     file.save(os.path.join(app.config['uploads'], photo))
                 description = request.form['description']
                 author_id = session['id']
-                db.create_new_pet(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price, photo,
+                db.create_new_pet(db.open_db(db_url), ad_id, category, breed, gender, birthdate, name, price, photo,
                                   description, author_id)
                 return redirect(url_for('all_pets'))
 
@@ -212,8 +212,8 @@ def start():
 
 
 
-    @app.route("/remove/<vendor_code>", methods=['GET', 'POST'])
-    def remove(vendor_code):
+    @app.route("/remove/<ad_id>", methods=['GET', 'POST'])
+    def remove(ad_id):
         search = request.args.get('search')
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
@@ -227,14 +227,14 @@ def start():
 
 
         if request.method == 'GET':
-            search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
-            return render_template('remove.html', pet=search_by_vendor_code_result, user_login=user_login)
+            search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
+            return render_template('remove.html', pet=search_by_ad_id_result, user_login=user_login)
         if request.method == 'POST':
-            db.remove_by_vendor_code(db.open_db(db_url), vendor_code)
+            db.remove_by_ad_id(db.open_db(db_url), ad_id)
             return redirect(url_for('all_pets'))
 
-    @app.route("/edit/<vendor_code>", methods=['GET', 'POST'])
-    def edit(vendor_code):
+    @app.route("/edit/<ad_id>", methods=['GET', 'POST'])
+    def edit(ad_id):
         search = request.args.get('search')
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
@@ -246,8 +246,8 @@ def start():
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
 
         if request.method == 'GET':
-            search_by_vendor_code_result = db.search_by_vendor_code(db.open_db(db_url), vendor_code)
-            return render_template('edit.html', pet=search_by_vendor_code_result, user_login=user_login)
+            search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
+            return render_template('edit.html', pet=search_by_ad_id_result, user_login=user_login)
 
         if request.method == 'POST':
             category = request.form['category']
@@ -261,9 +261,9 @@ def start():
                 photo = secure_filename(file.filename)
                 file.save(os.path.join(app.config['uploads'], photo))
             description = request.form['description']
-            db.edit_by_vendor_code(db.open_db(db_url), vendor_code, category, breed, gender, birthdate, name, price, photo,
+            db.edit_by_ad_id(db.open_db(db_url), ad_id, category, breed, gender, birthdate, name, price, photo,
                                    description)
-            return redirect(url_for('all_pets', vendor_code=vendor_code))
+            return redirect(url_for('all_pets', ad_id=ad_id))
 
     @app.route('/about', methods=('GET', 'POST'))
     def about():

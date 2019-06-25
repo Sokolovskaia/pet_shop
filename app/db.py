@@ -17,7 +17,7 @@ def create_table_pets(connection):
           , category TEXT NOT NULL
           , breed TEXT
           , gender TEXT
-          , birthdate NUMERIC
+          , birthdate TEXT
           , name TEXT
           , price INTEGER NOT NULL
           , presence INTEGER DEFAULT 0 CHECK (presence IN (1, 0))

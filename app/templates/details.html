@@ -26,7 +26,51 @@
         <h5 class="card-title">{{ pet.category }} породы {{ pet.breed }}</h5>
         <p class="card-text">Кличка: {{ pet.name }}</p>
         <p class="card-text">Пол: {{ pet.gender }}</p>
-        <p class="card-text">Дата рождения: {{ pet.birthdate }}</p>
+        <p class="card-text">Дата рождения:
+
+          {% if pet.birthdate == None %}
+          нет информации
+
+          {% elif pet.birthdate[:-4] == '1.' or pet.birthdate[:-4] == '01.' %}
+          январь {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '2.' or pet.birthdate[:-4] == '02.' %}
+          февраль {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '3.' or pet.birthdate[:-4] == '03.' %}
+          март {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '4.' or pet.birthdate[:-4] == '04.' %}
+          апрель {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '5.' or pet.birthdate[:-4] == '05.' %}
+          май {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '6.' or pet.birthdate[:-4] == '06.' %}
+          июнь {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '7.' or pet.birthdate[:-4] == '07.' %}
+          июль {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '8.' or pet.birthdate[:-4] == '08.' %}
+          август {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '9.' or pet.birthdate[:-4] == '09.' %}
+          сентябрь {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '10.' %}
+          октябрь {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '11.' %}
+          ноябрь {{pet.birthdate[-4:]}}
+
+          {% elif pet.birthdate[:-4] == '12.' %}
+          декабрь {{pet.birthdate[-4:]}}
+
+          {% else %}
+          {{ pet.birthdate }}
+          {% endif %}
+        </p>
         <p class="card-text">Цена: {{ pet.price }} руб.</p>
         <p class="card-text">Описание: {{ pet.description }} </p>
         <h5 class="card-text"><small class="text-muted">Автор объявления: {{ pet.surname }} {{ pet.author_name }} </small></h5>

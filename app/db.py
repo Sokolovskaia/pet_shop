@@ -40,7 +40,7 @@ def create_table_users(connection):
           , password TEXT NOT NULL
           , surname TEXT NOT NULL
           , name TEXT NOT NULL
-          , phone_number INTEGER NOT NULL UNIQUE 
+          , phone_number INTEGER NOT NULL
         );
         """)
         connection.commit()
@@ -259,3 +259,15 @@ def create_new_user(connection, login, password, surname, name, phone_number):
                , :phone_number)''',
             {'login': login, 'password': password, 'surname': surname, 'name': name, 'phone_number': phone_number})
         connection.commit()
+
+
+def validate_registration(connection, login):
+    with connection:
+        cursor = connection.cursor()
+        user = cursor.execute("""
+            SELECT login 
+              FROM users
+              WHERE login = :login""", {'login': login}).fetchone()
+        return user
+
+

@@ -1,3 +1,5 @@
+import sqlite3
+
 import waitress
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -9,8 +11,7 @@ import os
 from werkzeug.utils import secure_filename
 
 
-from app.db import validate_user
-
+from app.db import validate_user, validate_registration
 
 UPLOAD_FOLDER = 'app/static'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -170,6 +171,11 @@ def start():
         return render_template('about.html')
 
 
+    @app.route('/error', methods=('GET', 'POST'))
+    def error():
+        return render_template('error.html')
+
+
     @app.route('/registration', methods=('GET', 'POST'))
     def registration():
         if 'id' in session and session['id'] is not None:
@@ -186,19 +192,13 @@ def start():
                 surname = request.form['surname']
                 name = request.form['name']
                 phone_number = request.form['phone_number']
+                try:
+                   db.create_new_user(db.open_db(db_url), login, password, surname, name, phone_number)
+                except sqlite3.IntegrityError:
+                    return redirect(url_for('error'))
 
 
-                db.create_new_user(db.open_db(db_url), login, password, surname, name, phone_number)
-
-
-                return redirect(url_for('login'))
-
-            return render_template('registration.html')
-
-
-
-
-
+            return redirect(url_for('login'))
 
 
 

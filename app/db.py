@@ -260,14 +260,3 @@ def create_new_user(connection, login, password, surname, name, phone_number):
             {'login': login, 'password': password, 'surname': surname, 'name': name, 'phone_number': phone_number})
         connection.commit()
 
-
-def validate_registration(connection, login):
-    with connection:
-        cursor = connection.cursor()
-        user = cursor.execute("""
-            SELECT login 
-              FROM users
-              WHERE login = :login""", {'login': login}).fetchone()
-        return user
-
-

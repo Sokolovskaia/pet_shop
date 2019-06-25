@@ -11,7 +11,7 @@ import os
 from werkzeug.utils import secure_filename
 
 
-from app.db import validate_user, validate_registration
+from app.db import validate_user
 
 UPLOAD_FOLDER = 'app/static'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -54,6 +54,14 @@ def start():
             flash(val['error'])
 
         return render_template('login.html')
+
+    @app.route('/logout')
+    def logout():
+        session.pop('id', None)
+        return redirect(url_for('all_pets'))
+
+
+
 
     @app.route('/account', methods=('GET', 'POST'))
     def account():
@@ -171,15 +179,9 @@ def start():
         return render_template('about.html')
 
 
-    @app.route('/error', methods=('GET', 'POST'))
-    def error():
-        return render_template('error.html')
-
-
     @app.route('/registration', methods=('GET', 'POST'))
     def registration():
         if 'id' in session and session['id'] is not None:
-
             return redirect(url_for('account'))
 
         else:
@@ -187,6 +189,7 @@ def start():
                 return render_template('registration.html')
 
             if request.method == 'POST':
+                login_verification = {'success': False}
                 login = request.form['login']
                 password = request.form['password']
                 surname = request.form['surname']
@@ -195,9 +198,9 @@ def start():
                 try:
                    db.create_new_user(db.open_db(db_url), login, password, surname, name, phone_number)
                 except sqlite3.IntegrityError:
-                    return redirect(url_for('error'))
-
-
+                    login_verification['error'] = 'Пользователь c таким логином уже существует'
+                    flash(login_verification['error'])
+                    return render_template('registration.html')
             return redirect(url_for('login'))
 
 

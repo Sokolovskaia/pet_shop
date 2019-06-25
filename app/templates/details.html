@@ -76,6 +76,12 @@
         <h5 class="card-text"><small class="text-muted">Автор объявления: {{ pet.surname }} {{ pet.author_name }} </small></h5>
         <h5 class="card-text"><small class="text-muted">Контактный номер телефона: +{{ pet.phone_number }}</small> </h5>
         <p class="card-text"><small class="text-muted">Номер объявления: {{ pet.ad_id }} </small></p>
+
+<form action="{{ url_for('fav', ad_id=pet.ad_id) }}" method="post">
+    <button type="submit" class="btn btn-warning">Добавить в избранное</button>
+</form>
+
+
       </div>
     </div>
   </div>

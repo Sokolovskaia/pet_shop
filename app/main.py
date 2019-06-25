@@ -312,6 +312,28 @@ def start():
             return redirect(url_for('login'))
 
 
+    @app.route('/fav/<ad_id>', methods=['GET', 'POST'])
+    def fav(ad_id):
+        if 'id' in session and session['id'] is not None:
+            user = session['id']
+            if request.method == 'POST':
+                is_favor = db.is_favorites(db.open_db(db_url), ad_id, user)
+                empty = []
+                if is_favor == empty:
+                    db.add_to_favorites(db.open_db(db_url), ad_id, user)
+                    return redirect(url_for('details', ad_id=ad_id))
+                else:
+                    for result in is_favor:
+                        id = res['id']
+                        db.remove_from_favorites(db.open_db(db_url), id)
+                        return redirect(url_for('details', ad_id=ad_id))
+
+
+        else:
+            return redirect(url_for('login'))
+
+
+
 
     if os.getenv('APP_ENV') == 'PROD' and os.getenv('PORT'):
         waitress.serve(app, port=os.getenv('PORT'))

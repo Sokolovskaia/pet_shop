@@ -46,6 +46,18 @@ def create_table_users(connection):
         connection.commit()
 
 
+def create_table_favourites(connection):
+    with connection:
+        cursor = connection.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS favourites (
+            id INTEGER PRIMARY KEY AUTOINCREMENT
+          , ad INTEGER 
+          , user INTEGER
+        );
+        """)
+        connection.commit()
+
 def validate_user(connection, login, password):
     with connection:
         cursor = connection.cursor()
@@ -256,5 +268,40 @@ def create_new_user(connection, login, password, surname, name, phone_number):
                , :name
                , :phone_number)''',
             {'login': login, 'password': password, 'surname': surname, 'name': name, 'phone_number': phone_number})
+        connection.commit()
+
+
+def add_to_favorites(connection, ad, user):
+    with connection:
+        cursor = connection.cursor()
+        cursor.execute(
+            '''INSERT INTO favourites (
+              ad
+            , user
+            ) 
+               VALUES (
+                 :ad
+               , :user);''',
+            {'ad': ad, 'user': user})
+        connection.commit()
+
+def is_favorites(connection, ad, user):
+    with connection:
+        cursor = connection.cursor()
+        result = cursor.execute("""
+        SELECT * 
+          FROM favourites 
+         WHERE :ad = ad 
+         AND   :user = user 
+         LIMIT 20""", {'ad': ad, 'user': user}).fetchall()
+        return result
+
+def remove_from_favorites(connection, id):
+    with connection:
+        cursor = connection.cursor()
+        cursor.execute("""
+        DELETE FROM favourites
+              WHERE id = :id
+        """, {'id': id})
         connection.commit()
 

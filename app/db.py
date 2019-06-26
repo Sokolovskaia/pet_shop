@@ -305,3 +305,13 @@ def remove_from_favorites(connection, id):
         """, {'id': id})
         connection.commit()
 
+
+def counting_favorites(connection, ad):
+    with connection:
+        cursor = connection.cursor()
+        result = cursor.execute("""
+       SELECT ad, COUNT(user) number_users
+         FROM favourites
+         WHERE ad = :ad
+     GROUP BY ad""", {'ad': ad}).fetchone()
+        return result

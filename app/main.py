@@ -156,7 +156,7 @@ def start():
     @app.route("/details/<ad_id>", methods=('GET', 'POST'))
     def details(ad_id):
         favor = 2
-
+        counting_favor = db.counting_favorites(db.open_db(db_url), ad_id)
         search = request.args.get('search')
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
@@ -179,7 +179,7 @@ def start():
         search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
 
 
-        return render_template('details.html', pet=search_by_ad_id_result, user_login=user_login, favor=favor)
+        return render_template('details.html', pet=search_by_ad_id_result, user_login=user_login, favor=favor, counting_favor=counting_favor)
 
     @app.route('/new_pet', methods=('GET', 'POST'))
     def new_pet():

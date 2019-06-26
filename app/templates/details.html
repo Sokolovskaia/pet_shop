@@ -77,16 +77,23 @@
         <h5 class="card-text"><small class="text-muted">Контактный номер телефона: +{{ pet.phone_number }}</small> </h5>
         <p class="card-text"><small class="text-muted">Номер объявления: {{ pet.ad_id }} </small></p>
 
+
 <form action="{{ url_for('fav', ad_id=pet.ad_id) }}" method="post">
 
   {% if favor == 0  %}
 
-    <button type="submit" class="btn btn-warning">Добавить в избранное</button>
+  <button type="submit" class="btn btn-primary btn-sm">
+  Добавить в избранное <span class="badge badge-warning">{{ counting_favor.number_users }}</span>
+  <span class="sr-only">количество добавлений в избранное</span>
+</button>
+
 
   {% elif favor == 1 %}
 
-      <button type="submit" class="btn btn-warning">Удалить из избранного</button>
-
+  <button type="submit" class="btn btn-primary btn-sm">
+  Удалить из избранного <span class="badge badge-warning">{{ counting_favor.number_users }}</span>
+  <span class="sr-only">количество добавлений в избранное</span>
+</button>
   {% endif %}
 
 </form>

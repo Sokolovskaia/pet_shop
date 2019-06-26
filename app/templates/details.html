@@ -92,8 +92,12 @@
 
   <button type="submit" class="btn btn-primary btn-sm">
   Удалить из избранного <span class="badge badge-warning">{{ counting_favor.number_users }}</span>
-  <span class="sr-only">количество добавлений в избранное</span>
+  <span class="sr-only">Количество добавлений в избранное</span>
 </button>
+
+    {% elif favor == -1 %}
+<span class="badge badge-pill badge-warning">В избранном:   {{ counting_favor.number_users }}</span>
+
   {% endif %}
 
 </form>

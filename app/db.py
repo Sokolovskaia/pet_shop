@@ -99,7 +99,6 @@ def all_pets(connection):
         result = cursor.execute("""
         SELECT * 
           FROM pets 
-         WHERE category IN ('Собака', 'Кошка', 'Хомяк') 
          LIMIT 20""").fetchall()
         return result
 

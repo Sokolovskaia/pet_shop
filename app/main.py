@@ -8,6 +8,8 @@ from app import db
 
 import os
 
+import math
+
 from werkzeug.utils import secure_filename
 
 
@@ -17,13 +19,9 @@ UPLOAD_FOLDER = 'app/static'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-
-
 
 
 def start():
@@ -34,7 +32,6 @@ def start():
         SECRET_KEY='Marina_secret_key',
     )
     db_url = 'db.sqlite'
-
 
     @app.route('/login', methods=('GET', 'POST'))
     def login():
@@ -48,7 +45,6 @@ def start():
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
                                    user_login=user_login)
-
 
         if request.method == 'POST':
             login = request.form['login']
@@ -73,9 +69,6 @@ def start():
     def logout():
         session.pop('id', None)
         return redirect(url_for('all_pets'))
-
-
-
 
     @app.route('/account', methods=('GET', 'POST'))
     def account():
@@ -110,7 +103,6 @@ def start():
         all_pets_result = db.all_pets(db.open_db(db_url))
 
         return render_template('index.html', pets=all_pets_result, active_index='all_pets', user_login=user_login)
-
 
     @app.route('/dogs', methods=('GET', 'POST'))
     def dogs():
@@ -170,7 +162,6 @@ def start():
             else:
                 favor = 1
 
-
         else:
             user_login = 0
 
@@ -178,7 +169,6 @@ def start():
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
         search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
-
 
         return render_template('details.html', pet=search_by_ad_id_result, user_login=user_login, favor=favor, counting_favor=counting_favor)
 
@@ -193,7 +183,6 @@ def start():
         if search:
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
-
 
         if 'id' in session and session['id'] is not None:
             if request.method == 'GET':
@@ -221,10 +210,6 @@ def start():
         else:
             return redirect(url_for('login'))
 
-
-
-
-
     @app.route("/remove/<ad_id>", methods=['GET', 'POST'])
     def remove(ad_id):
         search = request.args.get('search')
@@ -237,7 +222,6 @@ def start():
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
                                    user_login=user_login)
-
 
         if request.method == 'GET':
             search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
@@ -293,7 +277,6 @@ def start():
 
         return render_template('about.html', user_login=user_login)
 
-
     @app.route('/registration', methods=('GET', 'POST'))
     def registration():
         search = request.args.get('search')
@@ -302,7 +285,6 @@ def start():
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
                                    user_login=user_login)
-
 
         if 'id' in session and session['id'] is not None:
             return redirect(url_for('account'))
@@ -326,7 +308,6 @@ def start():
                     return render_template('registration.html')
             return redirect(url_for('login'))
 
-
     @app.route('/fav/<ad_id>', methods=['GET', 'POST'])
     def fav(ad_id):
         if 'id' in session and session['id'] is not None:
@@ -345,12 +326,8 @@ def start():
                         favor = 0
                         return redirect(url_for('details', ad_id=ad_id, favor=favor))
 
-
         else:
             return redirect(url_for('login'))
-
-
-
 
     if os.getenv('APP_ENV') == 'PROD' and os.getenv('PORT'):
         waitress.serve(app, port=os.getenv('PORT'))

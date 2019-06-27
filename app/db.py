@@ -83,7 +83,6 @@ def validate_user(connection, login, password):
 
 
 
-
 def get_all(connection):
     with connection:
         cursor = connection.cursor()
@@ -201,6 +200,7 @@ def create_new_pet(connection, category, breed, gender, birthdate, name, price, 
              'name': name, 'price': price, 'photo': photo, 'description': description, 'author_id': author_id})
         connection.commit()
 
+
 def remove_by_ad_id(connection, ad_id):
     with connection:
         cursor = connection.cursor()
@@ -229,6 +229,7 @@ def edit_by_ad_id(connection, ad_id, category, breed, gender, birthdate, name, p
              'name': name, 'price': price, 'photo': photo, 'description': description})
         connection.commit()
 
+
 def all_ads_for_user(connection, username):
     with connection:
         cursor = connection.cursor()
@@ -238,6 +239,7 @@ def all_ads_for_user(connection, username):
          WHERE author_id = :username 
          LIMIT 20""", {'username': username}).fetchall()
         return result
+
 
 def number_of_ads(connection, username):
     with connection:
@@ -284,6 +286,7 @@ def add_to_favorites(connection, ad, user):
             {'ad': ad, 'user': user})
         connection.commit()
 
+
 def is_favorites(connection, ad, user):
     with connection:
         cursor = connection.cursor()
@@ -294,6 +297,7 @@ def is_favorites(connection, ad, user):
          AND   :user = user 
          LIMIT 20""", {'ad': ad, 'user': user}).fetchall()
         return result
+
 
 def remove_from_favorites(connection, id):
     with connection:

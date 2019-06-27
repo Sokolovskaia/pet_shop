@@ -83,54 +83,75 @@ def validate_user(connection, login, password):
 
 
 
-def get_all(connection):
+def get_all(connection, ads_on_page, pages_offset):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
         SELECT * 
-          FROM pets 
-         LIMIT 20""").fetchall()
+          FROM pets
+      ORDER BY ad_id 
+         LIMIT :ads_on_page
+         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
         return result
 
-def all_pets(connection):
+def all_ads_count(connection):
+    with connection:
+        cursor = connection.cursor()
+        result = cursor.execute("""
+        SELECT COUNT(ad_id) count_ads
+        FROM pets""").fetchone()
+        return result
+
+
+
+def all_pets(connection, ads_on_page, pages_offset):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
         SELECT * 
-          FROM pets 
-         LIMIT 20""").fetchall()
+          FROM pets
+      ORDER BY ad_id 
+         LIMIT :ads_on_page
+         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
         return result
 
 
-def dogs(connection):
+def dogs(connection, ads_on_page, pages_offset):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
         SELECT * 
           FROM pets 
          WHERE category =='Собака' 
-         LIMIT 20""").fetchall()
+         ORDER BY ad_id 
+         LIMIT :ads_on_page
+         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
         return result
 
 
-def cats(connection):
+def cats(connection, ads_on_page, pages_offset):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
         SELECT * 
           FROM pets 
          WHERE category =='Кошка' 
-         LIMIT 20""").fetchall()
+         ORDER BY ad_id 
+         LIMIT :ads_on_page
+         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
         return result
 
-def another_pets(connection):
+
+def another_pets(connection, ads_on_page, pages_offset):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
         SELECT * 
           FROM pets 
          WHERE category NOT IN ('Собака', 'Кошка') 
-         LIMIT 20""").fetchall()
+         ORDER BY ad_id 
+         LIMIT :ads_on_page
+         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
         return result
 
 
@@ -158,7 +179,7 @@ def search_by_ad_id(connection, ad_id):
         return result
 
 
-def search_pets(connection, search):
+def search_pets(connection, search, ads_on_page, pages_offset):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
@@ -168,7 +189,9 @@ def search_pets(connection, search):
             OR :search=breed 
             OR :search=category 
             OR :search=name 
-         LIMIT 20""", {'search': search}).fetchall()
+         ORDER BY ad_id 
+         LIMIT :ads_on_page
+        OFFSET :pages_offset""", {'search': search, 'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
         return result
 
 

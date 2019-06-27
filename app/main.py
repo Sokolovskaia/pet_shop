@@ -17,6 +17,7 @@ from app.db import validate_user
 
 UPLOAD_FOLDER = 'app/static'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ADDS_PER_PAGE = 6
 
 
 def allowed_file(filename):
@@ -91,6 +92,13 @@ def start():
 
     @app.route('/', methods=('GET', 'POST'))
     def all_pets():
+        number_of_ads = db.all_ads_count(db.open_db(db_url))
+        numb = number_of_ads['count_ads']
+        number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
+        all_pets_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
+        if 'pages_offset' in request.args.keys():
+            pages_offset = request.args.get('pages_offset')
+            all_pets_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset)
         search = request.args.get('search')
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
@@ -98,11 +106,10 @@ def start():
             user_login = 0
 
         if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
-        all_pets_result = db.all_pets(db.open_db(db_url))
+            search_result = db.search_pets(db.open_db(db_url), search, ADDS_PER_PAGE, pages_offset=0)
+            return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login, number_of_ads=number_of_ads, number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
-        return render_template('index.html', pets=all_pets_result, active_index='all_pets', user_login=user_login)
+        return render_template('index.html', pets=all_pets_result, active_index='all_pets', user_login=user_login, number_of_ads=number_of_ads, number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
     @app.route('/dogs', methods=('GET', 'POST'))
     def dogs():
@@ -115,8 +122,15 @@ def start():
         if search:
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
-        dogs_result = db.dogs(db.open_db(db_url))
-        return render_template('index.html', pets=dogs_result, active_index='dogs', user_login=user_login)
+
+        number_of_ads = db.all_ads_count(db.open_db(db_url))
+        numb = number_of_ads['count_ads']
+        number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
+        dogs_result = db.dogs(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
+        if 'pages_offset' in request.args.keys():
+            pages_offset = request.args.get('pages_offset')
+            dogs_result = db.dogs(db.open_db(db_url), ADDS_PER_PAGE, pages_offset)
+        return render_template('index.html', pets=dogs_result, active_index='dogs', user_login=user_login, number_of_ads=number_of_ads, number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
     @app.route('/cats', methods=('GET', 'POST'))
     def cats():
@@ -129,8 +143,14 @@ def start():
         if search:
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
-        cats_result = db.cats(db.open_db(db_url))
-        return render_template('index.html', pets=cats_result, active_index='cats', user_login=user_login)
+        number_of_ads = db.all_ads_count(db.open_db(db_url))
+        numb = number_of_ads['count_ads']
+        number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
+        cats_result = db.cats(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
+        if 'pages_offset' in request.args.keys():
+            pages_offset = request.args.get('pages_offset')
+            cats_result = db.cats(db.open_db(db_url), ADDS_PER_PAGE, pages_offset)
+        return render_template('index.html', pets=cats_result, active_index='cats', user_login=user_login, number_of_ads=number_of_ads, number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
     @app.route('/another_pets', methods=('GET', 'POST'))
     def another_pets():
@@ -143,8 +163,14 @@ def start():
         if search:
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets', user_login=user_login)
-        another_pets_result = db.another_pets(db.open_db(db_url))
-        return render_template('index.html', pets=another_pets_result, active_index='another_pets', user_login=user_login)
+        number_of_ads = db.all_ads_count(db.open_db(db_url))
+        numb = number_of_ads['count_ads']
+        number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
+        another_pets_result = db.another_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
+        if 'pages_offset' in request.args.keys():
+            pages_offset = request.args.get('pages_offset')
+            another_pets_result = db.another_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset)
+        return render_template('index.html', pets=another_pets_result, active_index='another_pets', user_login=user_login, number_of_ads=number_of_ads, number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
     @app.route("/details/<ad_id>", methods=('GET', 'POST'))
     def details(ad_id):

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+Избранное
+{% endblock %}
+
+{% block body %}
+
+<p class="h3 text-center font-bold" style="color:#529314"> Список избранных объявлений </p>
+
+<table class="table text-center">
+  <thead>
+    <tr  style="color:#D90204">
+      <th scope="col">Номер объявления</th>
+      <th scope="col">Категория</th>
+      <th scope="col">Порода</th>
+      <th scope="col">Кличка</th>
+      <th scope="col">Цена</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+        {% for ad in favorites_ads %}
+        <td><a href="{{ url_for('details', ad_id=ad.ad_id) }}" style="color:#529314"> {{ ad.ad_id }} </a></td>
+      <td>{{ ad.category }}</td>
+      <td>{{ ad.breed }}</td>
+      <td>{{ ad.name }}</td>
+      <td>{{ ad.price }}</td>
+    </tr>
+   {% endfor %}
+
+  </tbody>
+</table>
+
+       {% endblock %}

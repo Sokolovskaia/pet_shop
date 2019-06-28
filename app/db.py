@@ -58,6 +58,7 @@ def create_table_favourites(connection):
         """)
         connection.commit()
 
+
 def validate_user(connection, login, password):
     with connection:
         cursor = connection.cursor()
@@ -82,18 +83,6 @@ def validate_user(connection, login, password):
         return result
 
 
-
-def get_all(connection, ads_on_page, pages_offset):
-    with connection:
-        cursor = connection.cursor()
-        result = cursor.execute("""
-        SELECT * 
-          FROM pets
-      ORDER BY ad_id 
-         LIMIT :ads_on_page
-         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
-        return result
-
 def all_ads_count(connection):
     with connection:
         cursor = connection.cursor()
@@ -101,7 +90,6 @@ def all_ads_count(connection):
         SELECT COUNT(ad_id) count_ads
         FROM pets""").fetchone()
         return result
-
 
 
 def all_pets(connection, ads_on_page, pages_offset):
@@ -340,4 +328,31 @@ def counting_favorites(connection, ad):
          FROM favourites
          WHERE ad = :ad
      GROUP BY ad""", {'ad': ad}).fetchone()
+        return result
+
+def favorites_for_user(connection, user_id):
+    with connection:
+        cursor = connection.cursor()
+        result = cursor.execute("""
+       SELECT p.ad_id
+            , p.category
+            , p.breed
+            , p.name
+            , p.price
+            , p.photo
+         FROM favourites f 
+    LEFT JOIN pets p 
+           ON p.ad_id = f.ad
+        WHERE f.user = :user_id
+     ORDER BY f.id
+       """, {'user_id': user_id}).fetchall()
+        return result
+
+def counting_favorites_for_user(connection, user_id):
+    with connection:
+        cursor = connection.cursor()
+        result = cursor.execute("""
+       SELECT COUNT(id) number_favor_ads
+         FROM favourites
+         WHERE user = :user_id""", {'user_id': user_id}).fetchone()
         return result

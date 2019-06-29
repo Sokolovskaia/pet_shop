@@ -92,10 +92,9 @@ def start():
 
     @app.route('/', methods=('GET', 'POST'))
     def all_pets():
-        number_of_ads = db.all_ads_count(db.open_db(db_url))
-        numb = number_of_ads['count_ads']
-        number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
         all_pets_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
+        number_of_ads = len(db.all_pets(db.open_db(db_url), -1, pages_offset=0))
+        number_of_pages = math.ceil(number_of_ads / ADDS_PER_PAGE)
         if 'pages_offset' in request.args.keys():
             pages_offset = request.args.get('pages_offset')
             all_pets_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset)
@@ -114,6 +113,8 @@ def start():
         return render_template('index.html', pets=all_pets_result, active_index='all_pets', user_login=user_login,
                                number_of_ads=number_of_ads, number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
+
+
     @app.route('/dogs', methods=('GET', 'POST'))
     def dogs():
         search = request.args.get('search')
@@ -127,7 +128,7 @@ def start():
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
                                    user_login=user_login)
 
-        number_of_ads = db.all_ads_count(db.open_db(db_url))
+        number_of_ads = db.all_ads_count(db.open_db(db_url), category='Собака')
         numb = number_of_ads['count_ads']
         number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
         dogs_result = db.dogs(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
@@ -149,7 +150,7 @@ def start():
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
                                    user_login=user_login)
-        number_of_ads = db.all_ads_count(db.open_db(db_url))
+        number_of_ads = db.all_ads_count(db.open_db(db_url), category='Кошка')
         numb = number_of_ads['count_ads']
         number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
         cats_result = db.cats(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
@@ -171,7 +172,7 @@ def start():
             search_result = db.search_pets(db.open_db(db_url), search)
             return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
                                    user_login=user_login)
-        number_of_ads = db.all_ads_count(db.open_db(db_url))
+        number_of_ads = db.all_ads_count(db.open_db(db_url), category='Прочие')
         numb = number_of_ads['count_ads']
         number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
         another_pets_result = db.another_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)

@@ -83,12 +83,23 @@ def validate_user(connection, login, password):
         return result
 
 
-def all_ads_count(connection):
+def all_ads_count(connection, category=None):
     with connection:
         cursor = connection.cursor()
-        result = cursor.execute("""
-        SELECT COUNT(ad_id) count_ads
-        FROM pets""").fetchone()
+        if category:
+            result = cursor.execute("""
+            SELECT COUNT(ad_id) count_ads
+            FROM pets
+            WHERE category == :category""", {'category': category}).fetchone()
+        elif category == 'Прочие':
+            result = cursor.execute("""
+            SELECT COUNT(ad_id) count_ads
+            FROM pets
+            WHERE category NOT IN ('Кошка', 'Собака')""").fetchone()
+        else:
+            result = cursor.execute("""
+            SELECT COUNT(ad_id) count_ads
+            FROM pets""").fetchone()
         return result
 
 
@@ -179,7 +190,9 @@ def search_pets(connection, search, ads_on_page, pages_offset):
             OR :search=name 
          ORDER BY ad_id 
          LIMIT :ads_on_page
-        OFFSET :pages_offset""", {'search': search, 'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
+        OFFSET :pages_offset""", {'search': search
+                                , 'ads_on_page': ads_on_page
+                                , 'pages_offset': pages_offset}).fetchall()
         return result
 
 
@@ -305,8 +318,7 @@ def is_favorites(connection, ad, user):
         SELECT * 
           FROM favourites 
          WHERE :ad = ad 
-         AND   :user = user 
-         LIMIT 20""", {'ad': ad, 'user': user}).fetchall()
+         AND   :user = user""", {'ad': ad, 'user': user}).fetchall()
         return result
 
 

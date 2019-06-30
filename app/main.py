@@ -51,6 +51,7 @@ def start():
         search_result = db.search_pets(db.open_db(db_url), search, ADDS_PER_PAGE, pages_offset=0)
         if 'pages_offset' in request.args.keys():
             pages_offset = request.args.get('pages_offset')
+            search = request.args.get('search')
             search_result = db.search_pets(db.open_db(db_url), search, ADDS_PER_PAGE, pages_offset)
 
         return render_template('index.html', pets=search_result, search=search, active_index='search',

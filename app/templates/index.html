@@ -72,6 +72,14 @@
       {% endif %}
 
 
+      {% if active_index == 'search' %}
+            {% for pages_offset in range(number_of_pages) %}
+
+    <li class="page-item"><a class="page-link" href="{{ url_for('search', pages_offset=pages_offset*limit)}}">{{ loop.index }}</a></li>
+            {% endfor %}
+      {% endif %}
+
+
 
     <li class="page-item">
       <a class="page-link" href="#">Next</a>

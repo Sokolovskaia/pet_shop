@@ -1,4 +1,3 @@
-
 import sqlite3
 
 
@@ -86,7 +85,7 @@ def validate_user(connection, login, password):
 def all_ads_count(connection, category=None):
     with connection:
         cursor = connection.cursor()
-        if category:
+        if category and category != 'Прочие':
             result = cursor.execute("""
             SELECT COUNT(ad_id) count_ads
             FROM pets
@@ -103,54 +102,47 @@ def all_ads_count(connection, category=None):
         return result
 
 
-def all_pets(connection, ads_on_page, pages_offset):
+def all_ads_count_search(connection, search):
     with connection:
         cursor = connection.cursor()
         result = cursor.execute("""
-        SELECT * 
-          FROM pets
-      ORDER BY ad_id 
-         LIMIT :ads_on_page
-         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
+                    SELECT COUNT(ad_id) count_ads
+                    FROM pets
+                    WHERE :search=ad_id 
+                    OR :search=breed 
+                    OR :search=category 
+                    OR :search=name """, {'search': search}).fetchone()
         return result
 
 
-def dogs(connection, ads_on_page, pages_offset):
+def all_pets(connection, ads_on_page, pages_offset, category=None):
     with connection:
         cursor = connection.cursor()
-        result = cursor.execute("""
-        SELECT * 
-          FROM pets 
-         WHERE category =='Собака' 
-         ORDER BY ad_id 
-         LIMIT :ads_on_page
-         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
-        return result
+        if category and category != 'Прочие':
+            result = cursor.execute("""
+            SELECT * 
+              FROM pets
+             WHERE category == :category
+          ORDER BY ad_id 
+             LIMIT :ads_on_page
+            OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset,
+                                      'category': category}).fetchall()
+        elif category == 'Прочие':
+            result = cursor.execute("""
+            SELECT * 
+              FROM pets 
+             WHERE category NOT IN ('Собака', 'Кошка') 
+          ORDER BY ad_id 
+             LIMIT :ads_on_page
+            OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
+        else:
+            result = cursor.execute("""
+              SELECT * 
+                FROM pets
+            ORDER BY ad_id 
+               LIMIT :ads_on_page
+               OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
 
-
-def cats(connection, ads_on_page, pages_offset):
-    with connection:
-        cursor = connection.cursor()
-        result = cursor.execute("""
-        SELECT * 
-          FROM pets 
-         WHERE category =='Кошка' 
-         ORDER BY ad_id 
-         LIMIT :ads_on_page
-         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
-        return result
-
-
-def another_pets(connection, ads_on_page, pages_offset):
-    with connection:
-        cursor = connection.cursor()
-        result = cursor.execute("""
-        SELECT * 
-          FROM pets 
-         WHERE category NOT IN ('Собака', 'Кошка') 
-         ORDER BY ad_id 
-         LIMIT :ads_on_page
-         OFFSET :pages_offset""", {'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
         return result
 
 
@@ -191,8 +183,8 @@ def search_pets(connection, search, ads_on_page, pages_offset):
          ORDER BY ad_id 
          LIMIT :ads_on_page
         OFFSET :pages_offset""", {'search': search
-                                , 'ads_on_page': ads_on_page
-                                , 'pages_offset': pages_offset}).fetchall()
+            , 'ads_on_page': ads_on_page
+            , 'pages_offset': pages_offset}).fetchall()
         return result
 
 
@@ -250,7 +242,7 @@ def edit_by_ad_id(connection, ad_id, category, breed, gender, birthdate, name, p
              , description = :description
          WHERE ad_id = :ad_id
         """, {'ad_id': ad_id, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
-             'name': name, 'price': price, 'photo': photo, 'description': description})
+              'name': name, 'price': price, 'photo': photo, 'description': description})
         connection.commit()
 
 
@@ -342,6 +334,7 @@ def counting_favorites(connection, ad):
      GROUP BY ad""", {'ad': ad}).fetchone()
         return result
 
+
 def favorites_for_user(connection, user_id):
     with connection:
         cursor = connection.cursor()
@@ -352,13 +345,14 @@ def favorites_for_user(connection, user_id):
             , p.name
             , p.price
             , p.photo
-         FROM favourites f 
-    LEFT JOIN pets p 
+         FROM pets p
+    LEFT JOIN favourites f 
            ON p.ad_id = f.ad
         WHERE f.user = :user_id
      ORDER BY f.id
        """, {'user_id': user_id}).fetchall()
         return result
+
 
 def counting_favorites_for_user(connection, user_id):
     with connection:

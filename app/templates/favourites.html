@@ -19,15 +19,15 @@
     </tr>
   </thead>
   <tbody>
+          {% for ad in favorites_ads %}
     <tr>
-        {% for ad in favorites_ads %}
         <td><a href="{{ url_for('details', ad_id=ad.ad_id) }}" style="color:#529314"> {{ ad.ad_id }} </a></td>
       <td>{{ ad.category }}</td>
       <td>{{ ad.breed }}</td>
       <td>{{ ad.name }}</td>
       <td>{{ ad.price }}</td>
     </tr>
-   {% endfor %}
+         {% endfor %}
 
   </tbody>
 </table>

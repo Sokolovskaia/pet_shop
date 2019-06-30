@@ -33,24 +33,37 @@ def start():
     )
     db_url = 'db.sqlite'
 
-    @app.route('/login', methods=('GET', 'POST'))
-    def login():
-        search = request.args.get('search')
+    def user():
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
         else:
             user_login = 0
+        return user_login
 
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
+    @app.route('/search/', methods=('GET', 'POST'))
+    def search():
+        search = request.args.get('search')
+        user_login = user()
+        number_of_ads = db.all_ads_count_search(db.open_db(db_url), search)
+        numb = number_of_ads['count_ads']
+        number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
 
+        search_result = db.search_pets(db.open_db(db_url), search, ADDS_PER_PAGE, pages_offset=0)
+        if 'pages_offset' in request.args.keys():
+            pages_offset = request.args.get('pages_offset')
+            search_result = db.search_pets(db.open_db(db_url), search, ADDS_PER_PAGE, pages_offset)
+
+        return render_template('index.html', pets=search_result, search=search, active_index='search',
+                               user_login=user_login, number_of_pages=number_of_pages,
+                               limit=ADDS_PER_PAGE)
+
+    @app.route('/login', methods=('GET', 'POST'))
+    def login():
+        user_login = user()
         if request.method == 'POST':
             login = request.form['login']
             password = request.form['password']
             val = validate_user(db.open_db(db_url), login, password)
-
             if val['success']:
                 session.clear()
                 session['id'] = val['id']
@@ -58,11 +71,8 @@ def start():
                 session['surname'] = val['surname']
                 session['name'] = val['name']
                 session['phone_number'] = val['phone_number']
-
                 return redirect(url_for('account', username=session['id']))
-
             flash(val['error'])
-
         return render_template('login.html', user_login=user_login)
 
     @app.route('/logout')
@@ -79,118 +89,70 @@ def start():
         user_phone_number = session['phone_number']
         ads_for_user = db.all_ads_for_user(db.open_db(db_url), username)
         number_of_ads_for_user = db.number_of_ads(db.open_db(db_url), username)
-
-        search = request.args.get('search')
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
-
         return render_template('account.html', ads_for_user=ads_for_user, number_of_ads_for_user=number_of_ads_for_user,
                                user_id=username, user_login=user_login, user_surname=user_surname,
                                user_name=user_name, user_phone_number=user_phone_number, active_index='account')
 
     @app.route('/', methods=('GET', 'POST'))
     def all_pets():
-        all_pets_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
-        number_of_ads = len(db.all_pets(db.open_db(db_url), -1, pages_offset=0))
+        user_login = user()
+        all_ads_count_result = db.all_ads_count(db.open_db(db_url))
+        number_of_ads = all_ads_count_result['count_ads']
         number_of_pages = math.ceil(number_of_ads / ADDS_PER_PAGE)
+        all_pets_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
         if 'pages_offset' in request.args.keys():
             pages_offset = request.args.get('pages_offset')
             all_pets_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset)
-        search = request.args.get('search')
-        if 'id' in session and session['id'] is not None:
-            user_login = session['login']
-        else:
-            user_login = 0
-
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search, ADDS_PER_PAGE, pages_offset=0)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login, number_of_ads=number_of_ads, number_of_pages=number_of_pages,
-                                   limit=ADDS_PER_PAGE)
 
         return render_template('index.html', pets=all_pets_result, active_index='all_pets', user_login=user_login,
-                               number_of_ads=number_of_ads, number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
-
-
+                               number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
     @app.route('/dogs', methods=('GET', 'POST'))
     def dogs():
-        search = request.args.get('search')
-        if 'id' in session and session['id'] is not None:
-            user_login = session['login']
-        else:
-            user_login = 0
-
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
-
-        number_of_ads = db.all_ads_count(db.open_db(db_url), category='Собака')
-        numb = number_of_ads['count_ads']
-        number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
-        dogs_result = db.dogs(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
+        user_login = user()
+        all_ads_count_result = db.all_ads_count(db.open_db(db_url), category='Собака')
+        number_of_ads = all_ads_count_result['count_ads']
+        number_of_pages = math.ceil(number_of_ads / ADDS_PER_PAGE)
+        dogs_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0, category='Собака')
         if 'pages_offset' in request.args.keys():
             pages_offset = request.args.get('pages_offset')
-            dogs_result = db.dogs(db.open_db(db_url), ADDS_PER_PAGE, pages_offset)
+            dogs_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset, category='Собака')
         return render_template('index.html', pets=dogs_result, active_index='dogs', user_login=user_login,
-                               number_of_ads=number_of_ads, number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
+                               number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
     @app.route('/cats', methods=('GET', 'POST'))
     def cats():
-        search = request.args.get('search')
-        if 'id' in session and session['id'] is not None:
-            user_login = session['login']
-        else:
-            user_login = 0
-
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
-        number_of_ads = db.all_ads_count(db.open_db(db_url), category='Кошка')
-        numb = number_of_ads['count_ads']
-        number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
-        cats_result = db.cats(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
+        user_login = user()
+        all_ads_count_result = db.all_ads_count(db.open_db(db_url), category='Кошка')
+        number_of_ads = all_ads_count_result['count_ads']
+        number_of_pages = math.ceil(number_of_ads / ADDS_PER_PAGE)
+        cats_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0, category='Кошка')
         if 'pages_offset' in request.args.keys():
             pages_offset = request.args.get('pages_offset')
-            cats_result = db.cats(db.open_db(db_url), ADDS_PER_PAGE, pages_offset)
+            cats_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset, category='Кошка')
         return render_template('index.html', pets=cats_result, active_index='cats', user_login=user_login,
-                               number_of_ads=number_of_ads, number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
+                               number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
     @app.route('/another_pets', methods=('GET', 'POST'))
     def another_pets():
-        search = request.args.get('search')
-        if 'id' in session and session['id'] is not None:
-            user_login = session['login']
-        else:
-            user_login = 0
-
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
-        number_of_ads = db.all_ads_count(db.open_db(db_url), category='Прочие')
-        numb = number_of_ads['count_ads']
-        number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
-        another_pets_result = db.another_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0)
+        user_login = user()
+        all_ads_count_result = db.all_ads_count(db.open_db(db_url), category='Прочие')
+        number_of_ads = all_ads_count_result['count_ads']
+        number_of_pages = math.ceil(number_of_ads / ADDS_PER_PAGE)
+        another_pets_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset=0, category='Прочие')
         if 'pages_offset' in request.args.keys():
             pages_offset = request.args.get('pages_offset')
-            another_pets_result = db.another_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset)
+            another_pets_result = db.all_pets(db.open_db(db_url), ADDS_PER_PAGE, pages_offset, category='Прочие')
         return render_template('index.html', pets=another_pets_result, active_index='another_pets',
-                               user_login=user_login, number_of_ads=number_of_ads, number_of_pages=number_of_pages,
-                               limit=ADDS_PER_PAGE)
+                               user_login=user_login,
+                               number_of_pages=number_of_pages, limit=ADDS_PER_PAGE)
 
     @app.route("/details/<ad_id>", methods=('GET', 'POST'))
     def details(ad_id):
         favor = -1
         counting_favor = db.counting_favorites(db.open_db(db_url), ad_id)
-        search = request.args.get('search')
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
-
             user = session['id']
             is_favor = db.is_favorites(db.open_db(db_url), ad_id, user)
             empty = []
@@ -198,32 +160,15 @@ def start():
                 favor = 0
             else:
                 favor = 1
-
         else:
             user_login = 0
-
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
         search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
-
         return render_template('details.html', pet=search_by_ad_id_result, user_login=user_login, favor=favor,
                                counting_favor=counting_favor)
 
     @app.route('/new_pet', methods=('GET', 'POST'))
     def new_pet():
-        search = request.args.get('search')
-        if 'id' in session and session['id'] is not None:
-            user_login = session['login']
-        else:
-            user_login = 0
-
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
-
+        user_login = user()
         if 'id' in session and session['id'] is not None:
             if request.method == 'GET':
                 return render_template('new_pet.html', user_login=user_login)
@@ -235,6 +180,7 @@ def start():
                 birthdate = request.form['birthdate']
                 name = request.form['name']
                 price = int(request.form['price'])
+                photo = None
                 file = request.files['file']
                 if file and allowed_file(file.filename):
                     photo = secure_filename(file.filename)
@@ -252,80 +198,52 @@ def start():
 
     @app.route("/remove/<ad_id>", methods=['GET', 'POST'])
     def remove(ad_id):
-        search = request.args.get('search')
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
+            if request.method == 'GET':
+                search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
+                return render_template('remove.html', pet=search_by_ad_id_result, user_login=user_login)
+            if request.method == 'POST':
+                db.remove_by_ad_id(db.open_db(db_url), ad_id)
+                return redirect(url_for('all_pets'))
         else:
-            user_login = 0
-
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
-
-        if request.method == 'GET':
-            search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
-            return render_template('remove.html', pet=search_by_ad_id_result, user_login=user_login)
-        if request.method == 'POST':
-            db.remove_by_ad_id(db.open_db(db_url), ad_id)
-            return redirect(url_for('all_pets'))
+            return redirect(url_for('login'))
 
     @app.route("/edit/<ad_id>", methods=['GET', 'POST'])
     def edit(ad_id):
-        search = request.args.get('search')
         if 'id' in session and session['id'] is not None:
             user_login = session['login']
+            if request.method == 'GET':
+                search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
+                return render_template('edit.html', pet=search_by_ad_id_result, user_login=user_login)
+
+            if request.method == 'POST':
+                category = request.form['category']
+                breed = request.form['breed']
+                gender = request.form['gender']
+                birthdate = request.form['birthdate']
+                name = request.form['name']
+                price = int(request.form['price'])
+                file = request.files['file']
+                photo = None
+                if file and allowed_file(file.filename):
+                    photo = secure_filename(file.filename)
+                    file.save(os.path.join(app.config['uploads'], photo))
+                description = request.form['description']
+                db.edit_by_ad_id(db.open_db(db_url), ad_id, category, breed, gender, birthdate, name, price, photo,
+                                 description)
+                return redirect(url_for('all_pets', ad_id=ad_id))
         else:
-            user_login = 0
-
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
-
-        if request.method == 'GET':
-            search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
-            return render_template('edit.html', pet=search_by_ad_id_result, user_login=user_login)
-
-        if request.method == 'POST':
-            category = request.form['category']
-            breed = request.form['breed']
-            gender = request.form['gender']
-            birthdate = request.form['birthdate']
-            name = request.form['name']
-            price = int(request.form['price'])
-            file = request.files['file']
-            if file and allowed_file(file.filename):
-                photo = secure_filename(file.filename)
-                file.save(os.path.join(app.config['uploads'], photo))
-            description = request.form['description']
-            db.edit_by_ad_id(db.open_db(db_url), ad_id, category, breed, gender, birthdate, name, price, photo,
-                             description)
-            return redirect(url_for('all_pets', ad_id=ad_id))
+            return redirect(url_for('login'))
 
     @app.route('/about', methods=('GET', 'POST'))
     def about():
-        search = request.args.get('search')
-        if 'id' in session and session['id'] is not None:
-            user_login = session['login']
-        else:
-            user_login = 0
-
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
-
+        user_login = user()
         return render_template('about.html', user_login=user_login)
 
     @app.route('/registration', methods=('GET', 'POST'))
     def registration():
-        search = request.args.get('search')
-        user_login = 0
-        if search:
-            search_result = db.search_pets(db.open_db(db_url), search)
-            return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                   user_login=user_login)
+        user_login = user()
 
         if 'id' in session and session['id'] is not None:
             return redirect(url_for('account'))
@@ -366,7 +284,6 @@ def start():
                         db.remove_from_favorites(db.open_db(db_url), id)
                         favor = 0
                         return redirect(url_for('details', ad_id=ad_id, favor=favor))
-
         else:
             return redirect(url_for('login'))
 
@@ -378,11 +295,7 @@ def start():
             favorites_ads = db.favorites_for_user(db.open_db(db_url), username)
             counting = db.counting_favorites_for_user(db.open_db(db_url), username)
             counting_favorites = counting['number_favor_ads']
-            search = request.args.get('search')
-            if search:
-                search_result = db.search_pets(db.open_db(db_url), search)
-                return render_template('index.html', pets=search_result, search=search, active_index='all_pets',
-                                       user_login=user_login)
+
             return render_template('favourites.html', user_id=username, user_login=user_login,
                                    favorites_ads=favorites_ads, counting_favorites=counting_favorites)
         else:

@@ -8,6 +8,7 @@
 
 {% block body %}
 
+
 <h2>Вы уверены, что хотите удалить объявление:
     <p>{{ pet.category }} породы {{ pet.breed }} по кличке {{ pet.name }} <br/>( Номер объявления: {{ pet.ad_id }})?</p></h2>
 <form action="{{ url_for('remove', ad_id=pet.ad_id) }}" method="post">

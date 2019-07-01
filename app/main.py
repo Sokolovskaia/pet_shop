@@ -209,10 +209,11 @@ def start():
                 search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
                 return render_template('remove.html', pet=search_by_ad_id_result, user_login=user_login)
             if request.method == 'POST':
-                # search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
-                # photo_name = search_by_ad_id_result['photo']
-                # if os.path.isfile(os.path.join(app.config['uploads'], photo_name)):
-                #     photo_name.remove(os.path.join(app.config['uploads']))
+                search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
+                photo_name_1 = search_by_ad_id_result['photo']
+                photo_name = os.path.join(app.config['uploads'], photo_name_1)
+                if os.path.isfile(photo_name):
+                    os.remove(photo_name)
                 db.remove_by_ad_id(db.open_db(db_url), ad_id)
                 return redirect(url_for('all_pets'))
         else:

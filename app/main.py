@@ -42,7 +42,8 @@ def start():
 
     @app.route('/search/', methods=('GET', 'POST'))
     def search():
-        search = request.args.get('search')
+        search_request = request.args.get('search')
+        search = search_request.strip().lower()
         user_login = user()
         number_of_ads = db.all_ads_count_search(db.open_db(db_url), search)
         numb = number_of_ads['count_ads']
@@ -176,10 +177,13 @@ def start():
 
             if request.method == 'POST':
                 category = request.form['category']
+                category_lowercased = category.strip().lower()
                 breed = request.form['breed']
+                breed_lowercased = breed.strip().lower()
                 gender = request.form['gender']
                 birthdate = request.form['birthdate']
                 name = request.form['name']
+                name_lowercased = name.strip().lower()
                 price = int(request.form['price'])
                 photo = None
                 file = request.files['file']
@@ -188,7 +192,7 @@ def start():
                     file.save(os.path.join(app.config['uploads'], photo))
                 description = request.form['description']
                 author_id = session['id']
-                db.create_new_pet(db.open_db(db_url), category, breed, gender, birthdate, name, price, photo,
+                db.create_new_pet(db.open_db(db_url), category, category_lowercased, breed, breed_lowercased, gender, birthdate, name, name_lowercased, price, photo,
                                   description, author_id)
                 return redirect(url_for('all_pets'))
 
@@ -224,10 +228,13 @@ def start():
 
             if request.method == 'POST':
                 category = request.form['category']
+                category_lowercased = category.strip().lower()
                 breed = request.form['breed']
+                breed_lowercased = category.strip().lower()
                 gender = request.form['gender']
                 birthdate = request.form['birthdate']
                 name = request.form['name']
+                name_lowercased = name.strip().lower()
                 price = int(request.form['price'])
                 file = request.files['file']
                 photo = None
@@ -235,7 +242,7 @@ def start():
                     photo = secure_filename(file.filename)
                     file.save(os.path.join(app.config['uploads'], photo))
                 description = request.form['description']
-                db.edit_by_ad_id(db.open_db(db_url), ad_id, category, breed, gender, birthdate, name, price, photo,
+                db.edit_by_ad_id(db.open_db(db_url), ad_id, category, category_lowercased, breed, breed_lowercased, gender, birthdate, name, name_lowercased, price, photo,
                                  description)
                 return redirect(url_for('all_pets', ad_id=ad_id))
         else:
@@ -309,7 +316,7 @@ def start():
     if os.getenv('APP_ENV') == 'PROD' and os.getenv('PORT'):
         waitress.serve(app, port=os.getenv('PORT'))
     else:
-        app.run(port=9874, debug=True)
+        app.run(port=9875, debug=True)
 
 
 if __name__ == '__main__':

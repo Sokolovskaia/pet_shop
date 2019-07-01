@@ -14,12 +14,14 @@ def create_table_pets(connection):
         CREATE TABLE IF NOT EXISTS pets (
             ad_id INTEGER PRIMARY KEY AUTOINCREMENT
           , category TEXT NOT NULL
+          , category_lowercased TEXT NOT NULL
           , breed TEXT
+          , breed_lowercased TEXT
           , gender TEXT
           , birthdate TEXT
           , name TEXT
+          , name_lowercased TEXT
           , price INTEGER NOT NULL
-          , presence INTEGER DEFAULT 0 CHECK (presence IN (1, 0))
           , photo TEXT
           , description TEXT
           , author_id INTEGER NOT NULL
@@ -178,41 +180,51 @@ def search_pets(connection, search, ads_on_page, pages_offset):
         SELECT *
           FROM pets
          WHERE :search=ad_id 
-            OR :search=breed 
-            OR :search=category
-            OR :search=name 
+            OR :search=breed_lowercased 
+            OR :search=category_lowercased
+            OR :search=name_lowercased 
          ORDER BY ad_id 
          LIMIT :ads_on_page
-        OFFSET :pages_offset""", {'search': search, 'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
+        OFFSET :pages_offset""",
+                                {'search': search, 'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
         return result
 
 
-def create_new_pet(connection, category, breed, gender, birthdate, name, price, photo, description, author_id):
+def create_new_pet(connection, category, category_lowercased, breed, breed_lowercased, gender, birthdate, name,
+                   name_lowercased, price, photo, description, author_id):
     with connection:
         cursor = connection.cursor()
         cursor.execute(
             '''INSERT INTO pets (
               category
+            , category_lowercased
             , breed
+            , breed_lowercased
             , gender
             , birthdate
             , name
+            , name_lowercased
             , price
             , photo
             , description
             , author_id) 
                VALUES (
                  :category
+               , :category_lowercased
                , :breed
+               , :breed_lowercased
                , :gender
                , :birthdate
                , :name
+               , :name_lowercased
                , :price
                , :photo
                , :description
                , :author_id)''',
-            {'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
-             'name': name, 'price': price, 'photo': photo, 'description': description, 'author_id': author_id})
+            {'category': category, 'category_lowercased': category_lowercased, 'breed': breed,
+             'breed_lowercased': breed_lowercased, 'gender': gender, 'birthdate': birthdate,
+             'name': name, 'name_lowercased': name_lowercased, 'price': price, 'photo': photo,
+             'description': description, 'author_id': author_id})
         connection.commit()
 
 
@@ -226,22 +238,25 @@ def remove_by_ad_id(connection, ad_id):
         connection.commit()
 
 
-def edit_by_ad_id(connection, ad_id, category, breed, gender, birthdate, name, price, photo, description):
+def edit_by_ad_id(connection, ad_id, category, category_lowercased, breed, breed_lowercased, gender, birthdate, name, name_lowercased, price, photo, description):
     with connection:
         cursor = connection.cursor()
         cursor.execute("""
         UPDATE pets 
            SET category = :category
+             , category_lowercased = :category_lowercased
              , breed = :breed
+             , breed_lowercased = :breed_lowercased
              , gender = :gender
              , birthdate = :birthdate
              , name = :name
+             , name_lowercased = :name_lowercased
              , price = :price
              , photo = :photo
              , description = :description
          WHERE ad_id = :ad_id
-        """, {'ad_id': ad_id, 'category': category, 'breed': breed, 'gender': gender, 'birthdate': birthdate,
-              'name': name, 'price': price, 'photo': photo, 'description': description})
+        """, {'ad_id': ad_id, 'category': category, 'category_lowercased': category_lowercased, 'breed': breed, 'breed_lowercased': breed_lowercased, 'gender': gender, 'birthdate': birthdate,
+              'name': name, 'name_lowercased': name_lowercased, 'price': price, 'photo': photo, 'description': description})
         connection.commit()
 
 

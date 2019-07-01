@@ -12,7 +12,6 @@ import math
 
 from werkzeug.utils import secure_filename
 
-from app.db import validate_user
 
 UPLOAD_FOLDER = 'app/static'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -42,18 +41,18 @@ def start():
 
     @app.route('/search/', methods=('GET', 'POST'))
     def search():
-        search_request = request.args.get('search')
-        search = search_request.strip().lower()
+        search = request.args.get('search')
+        search_lowecased = search.strip().lower()
         user_login = user()
-        number_of_ads = db.all_ads_count_search(db.open_db(db_url), search)
+        number_of_ads = db.all_ads_count_search(db.open_db(db_url), search_lowecased)
         numb = number_of_ads['count_ads']
         number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
 
-        search_result = db.search_pets(db.open_db(db_url), search, ADDS_PER_PAGE, pages_offset=0)
+        search_result = db.search_pets(db.open_db(db_url), search_lowecased, ADDS_PER_PAGE, pages_offset=0)
         if 'pages_offset' in request.args.keys():
             pages_offset = request.args.get('pages_offset')
             search = request.args.get('search')
-            search_result = db.search_pets(db.open_db(db_url), search, ADDS_PER_PAGE, pages_offset)
+            search_result = db.search_pets(db.open_db(db_url), search_lowecased, ADDS_PER_PAGE, pages_offset)
 
         return render_template('index.html', pets=search_result, search=search, active_index='search',
                                user_login=user_login, number_of_pages=number_of_pages,
@@ -65,7 +64,7 @@ def start():
         if request.method == 'POST':
             login = request.form['login']
             password = request.form['password']
-            val = validate_user(db.open_db(db_url), login, password)
+            val = db.validate_user(db.open_db(db_url), login, password)
             if val['success']:
                 session.clear()
                 session['id'] = val['id']
@@ -211,9 +210,10 @@ def start():
             if request.method == 'POST':
                 search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
                 photo_name_1 = search_by_ad_id_result['photo']
-                photo_name = os.path.join(app.config['uploads'], photo_name_1)
-                if os.path.isfile(photo_name):
-                    os.remove(photo_name)
+                if photo_name_1:
+                    photo_name = os.path.join(app.config['uploads'], photo_name_1)
+                    if os.path.isfile(photo_name):
+                        os.remove(photo_name)
                 db.remove_by_ad_id(db.open_db(db_url), ad_id)
                 return redirect(url_for('all_pets'))
         else:

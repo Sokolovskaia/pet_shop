@@ -53,6 +53,7 @@ def create_table_favourites(connection):
             id INTEGER PRIMARY KEY AUTOINCREMENT
           , ad INTEGER 
           , user INTEGER
+          , FOREIGN KEY (ad) REFERENCES pets (ad_id) ON DELETE CASCADE 
         );
         """)
         connection.commit()
@@ -178,13 +179,11 @@ def search_pets(connection, search, ads_on_page, pages_offset):
           FROM pets
          WHERE :search=ad_id 
             OR :search=breed 
-            OR :search=category 
+            OR :search=category
             OR :search=name 
          ORDER BY ad_id 
          LIMIT :ads_on_page
-        OFFSET :pages_offset""", {'search': search
-            , 'ads_on_page': ads_on_page
-            , 'pages_offset': pages_offset}).fetchall()
+        OFFSET :pages_offset""", {'search': search, 'ads_on_page': ads_on_page, 'pages_offset': pages_offset}).fetchall()
         return result
 
 

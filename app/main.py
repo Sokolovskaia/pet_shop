@@ -205,6 +205,10 @@ def start():
                 search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
                 return render_template('remove.html', pet=search_by_ad_id_result, user_login=user_login)
             if request.method == 'POST':
+                # search_by_ad_id_result = db.search_by_ad_id(db.open_db(db_url), ad_id)
+                # photo_name = search_by_ad_id_result['photo']
+                # if os.path.isfile(os.path.join(app.config['uploads'], photo_name)):
+                #     photo_name.remove(os.path.join(app.config['uploads']))
                 db.remove_by_ad_id(db.open_db(db_url), ad_id)
                 return redirect(url_for('all_pets'))
         else:
@@ -305,7 +309,7 @@ def start():
     if os.getenv('APP_ENV') == 'PROD' and os.getenv('PORT'):
         waitress.serve(app, port=os.getenv('PORT'))
     else:
-        app.run(port=9873, debug=True)
+        app.run(port=9874, debug=True)
 
 
 if __name__ == '__main__':

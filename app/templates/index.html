@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Зоомагазин
+Зоомагазин PetShop
 {% endblock %}
 
 {% block body %}
@@ -12,10 +12,10 @@
             {% for pet in pets %}
             <div class="card">
                 {% if pet.photo %}
-                <img src="/static/{{ pet.photo }}" class="card-img-top" alt="Ваш будущий четвероногий друг">
+                <img src="/static/{{ pet.photo }}" class="card-img-top" alt="Четвероногий друг">
 
                 {% else %}
-                <img src="/static/7.jpg" class="card-img-top" alt="Ваш будущий четвероногий друг">
+                <img src="/static/7.jpg" class="card-img-top" alt="Четвероногий друг">
                 {% endif %}
 
                 <div class="card-body">

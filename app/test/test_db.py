@@ -11,7 +11,7 @@ def create_table_pets(connection):
     with connection:
         cursor = connection.cursor()
         cursor.execute("""
-        CREATE TABLE IF NOT EXISTS test_pets (
+        CREATE TABLE IF NOT EXISTS pets (
             ad_id INTEGER PRIMARY KEY AUTOINCREMENT
           , category TEXT NOT NULL
           , category_lowercased TEXT NOT NULL
@@ -35,7 +35,7 @@ def create_table_users(connection):
     with connection:
         cursor = connection.cursor()
         cursor.execute("""
-        CREATE TABLE IF NOT EXISTS test_users (
+        CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT
           , login TEXT NOT NULL UNIQUE 
           , password TEXT NOT NULL
@@ -51,11 +51,11 @@ def create_table_favourites(connection):
     with connection:
         cursor = connection.cursor()
         cursor.execute("""
-        CREATE TABLE IF NOT EXISTS test_favourites (
+        CREATE TABLE IF NOT EXISTS favourites (
             id INTEGER PRIMARY KEY AUTOINCREMENT
           , ad INTEGER 
           , user INTEGER
-          , FOREIGN KEY (ad) REFERENCES pets (ad_id) ON DELETE CASCADE 
+          , FOREIGN KEY (ad) REFERENCES pets(ad_id) ON DELETE CASCADE 
         );
         """)
         connection.commit()

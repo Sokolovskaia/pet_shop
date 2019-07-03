@@ -55,7 +55,7 @@ def create_table_favourites(connection):
             id INTEGER PRIMARY KEY AUTOINCREMENT
           , ad INTEGER 
           , user INTEGER
-          , FOREIGN KEY (ad) REFERENCES pets (ad_id) ON DELETE CASCADE 
+          , FOREIGN KEY (ad) REFERENCES pets(ad_id) ON DELETE CASCADE 
         );
         """)
         connection.commit()

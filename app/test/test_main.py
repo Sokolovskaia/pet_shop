@@ -322,3 +322,11 @@ def test_favorites_for_user():
     assert expected == actual
 
 
+def test_counting_favorites_for_user():
+    expected = 4
+    user_id = 1
+    actual_1 = db.counting_favorites_for_user(open_db(db_url), user_id)
+    actual = actual_1['number_favor_ads']
+    assert expected == actual
+
+

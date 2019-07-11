@@ -3,6 +3,7 @@ import sqlite3
 import waitress
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_bcrypt import Bcrypt
 
 from app import db
 
@@ -25,6 +26,8 @@ def allowed_file(filename):
 
 def start():
     app = Flask(__name__)
+    bcrypt = Bcrypt(app)
+
     app.config['uploads'] = UPLOAD_FOLDER
 
     app.config.from_mapping(
@@ -62,18 +65,27 @@ def start():
     def login():
         user_login = user()
         if request.method == 'POST':
+            result = {'success': False}
             login = request.form['login']
             password = request.form['password']
-            val = db.validate_user(db.open_db(db_url), login, password)
-            if val['success']:
-                session.clear()
-                session['id'] = val['id']
-                session['login'] = val['login']
-                session['surname'] = val['surname']
-                session['name'] = val['name']
-                session['phone_number'] = val['phone_number']
+            val = db.validate_user(db.open_db(db_url), login)
+            if val is None:
+                result['error'] = 'Пользователь не найден'
+                flash(result['error'])
+            elif val is not None:
+                valid_password = bcrypt.check_password_hash(val['password'], password)
+                if valid_password == False:
+                    result['error'] = 'Неверный пароль'
+                    flash(result['error'])
+                    return render_template('login.html', user_login=user_login)
+                elif valid_password == True:
+                    session.clear()
+                    session['id'] = val['id']
+                    session['login'] = val['login']
+                    session['surname'] = val['surname']
+                    session['name'] = val['name']
+                    session['phone_number'] = val['phone_number']
                 return redirect(url_for('account', username=session['id']))
-            flash(val['error'])
         return render_template('login.html', user_login=user_login)
 
     @app.route('/logout')
@@ -268,7 +280,8 @@ def start():
             if request.method == 'POST':
                 login_verification = {'success': False}
                 login = request.form['login']
-                password = request.form['password']
+                password_n = request.form['password']
+                password = bcrypt.generate_password_hash(password_n)
                 surname = request.form['surname']
                 name = request.form['name']
                 phone_number = request.form['phone_number']

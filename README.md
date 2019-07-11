@@ -12,9 +12,9 @@ https://petshop-sokolovskaia.herokuapp.com/
 
 login | password
 --- | ---
-lisa | 1
-an | 2
-ivan | 3
-marina | 4
+lena | lena
+oleg | oleg
+timur | timur
+marina | marina
 
 ---

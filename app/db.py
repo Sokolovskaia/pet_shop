@@ -61,28 +61,14 @@ def create_table_favourites(connection):
         connection.commit()
 
 
-def validate_user(connection, login, password):
+def validate_user(connection, login):
     with connection:
         cursor = connection.cursor()
-        result = {'success': False}
         user = cursor.execute("""
             SELECT * 
               FROM users 
              WHERE login = :login""", {'login': login}).fetchone()
-
-        if user is None:
-            result['error'] = 'Пользователь не найден'
-        elif not user['password'] == password:
-            result['error'] = 'Неверный пароль'
-        else:
-            result['id'] = user['id']
-            result['login'] = user['login']
-            result['surname'] = user['surname']
-            result['name'] = user['name']
-            result['phone_number'] = user['phone_number']
-            result['success'] = True
-
-        return result
+        return user
 
 
 def all_ads_count(connection, category=None):

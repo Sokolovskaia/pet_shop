@@ -171,26 +171,16 @@ def test_search_pets_breed_no_result():
 
 
 def test_validate_user_success():
-    expected = {'id': 1, 'login': 'anna', 'surname': 'Иванова', 'name': 'Анна', 'phone_number': 55555, 'success': True}
+    expected = {'id': 1, 'login': 'anna', 'password': '1', 'surname': 'Иванова', 'name': 'Анна', 'phone_number': 55555}
     login = 'anna'
-    password = '1'
-    actual = dict(db.validate_user(open_db(db_url), login, password))
+    actual = dict(db.validate_user(open_db(db_url), login))
     assert expected == actual
 
 
 def test_validate_user_error_login():
-    expected = {'error': 'Пользователь не найден', 'success': False}
+    expected = None
     login = 'ana'
-    password = '1'
-    actual = dict(db.validate_user(open_db(db_url), login, password))
-    assert expected == actual
-
-
-def test_validate_user_error_password():
-    expected = {'error': 'Неверный пароль', 'success': False}
-    login = 'anna'
-    password = '2'
-    actual = dict(db.validate_user(open_db(db_url), login, password))
+    actual = db.validate_user(open_db(db_url), login)
     assert expected == actual
 
 

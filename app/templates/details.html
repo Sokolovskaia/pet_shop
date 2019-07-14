@@ -7,16 +7,21 @@
 
 
 {% block body %}
+<p>
 
+</p>
     <p class="h3 text-center font-weight-bold">Подробнее о животном по имени {{ pet.name }}</p>
 
-<div class="card mb-3" style="max-width: 640px;">
+<div class="card mb" style="max-width:100%;">
   <div class="row no-gutters">
-    <div class="col-md-4">
+    <div class="col-md">
+
         {% if pet.photo %}
-      <img src="/static/{{ pet.photo }}" class="card-img" alt="{{ pet.category }} {{ pet.name }}">
+      <img src="/static/{{ pet.photo }}" class="card-img-top" alt="{{ pet.category }} {{ pet.name }}"  width="345"
+height="299">
         {% else %}
-      <img src="/static/7.jpg" class="card-img" alt="{{ pet.category }} {{ pet.name }}">
+      <img src="/static/7.jpg" class="card-img-top" alt="{{ pet.category }} {{ pet.name }}"  width="300"
+height="260">
         {% endif %}
 
 

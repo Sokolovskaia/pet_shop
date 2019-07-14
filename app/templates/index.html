@@ -22,10 +22,10 @@
             {% for pet in pets %}
             <div class="card">
                 {% if pet.photo %}
-                <img src="/static/{{ pet.photo }}" class="card-img-top" alt="Четвероногий друг">
+                <img src="/static/{{ pet.photo }}" class="card-img-top" alt="Четвероногий друг" height="260">
 
                 {% else %}
-                <img src="/static/7.jpg" class="card-img-top" alt="Четвероногий друг">
+                <img src="/static/7.jpg" class="card-img-top" alt="Четвероногий друг" height="260">
                 {% endif %}
 
                 <div class="card-body">

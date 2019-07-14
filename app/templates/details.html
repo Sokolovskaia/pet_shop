@@ -7,110 +7,120 @@
 
 
 {% block body %}
+
 <p>
 
 </p>
-    <p class="h3 text-center font-weight-bold">Подробнее о животном по имени {{ pet.name }}</p>
+    <p class="h3 text-center font-bold" style="color:#563d7c">Подробнее о животном по имени {{ pet.name }}</p>
 
-<div class="card mb" style="max-width:100%;">
-  <div class="row no-gutters">
-    <div class="col-md">
+<p>
 
-        {% if pet.photo %}
-      <img src="/static/{{ pet.photo }}" class="card-img-top" alt="{{ pet.category }} {{ pet.name }}"  width="345"
-height="299">
-        {% else %}
-      <img src="/static/7.jpg" class="card-img-top" alt="{{ pet.category }} {{ pet.name }}"  width="300"
-height="260">
-        {% endif %}
+</p>
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-sm" style="max-width: 40%;">
+            {% if pet.photo %}
+            <img src="/static/{{ pet.photo }}" class="card-img-top" alt="{{ pet.category }} {{ pet.name }}">
+            {% else %}
+            <img src="/static/7.jpg" class="card-img-top" alt="{{ pet.category }} {{ pet.name }}" width="300"
+                 height="260">
+            {% endif %}
+
+                </div>
 
 
+
+        <div class="col-sm" style="max-width: 60%;">
+
+            <h5>{{ pet.category }} породы {{ pet.breed }}</h5>
+            <p>Кличка: {{ pet.name }}</p>
+            <p>Пол: {{ pet.gender }}</p>
+            <p>Дата рождения:
+
+                {% if pet.birthdate == None %}
+                нет информации
+
+                {% elif pet.birthdate[:-4] == '1.' or pet.birthdate[:-4] == '01.' %}
+                январь {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '2.' or pet.birthdate[:-4] == '02.' %}
+                февраль {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '3.' or pet.birthdate[:-4] == '03.' %}
+                март {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '4.' or pet.birthdate[:-4] == '04.' %}
+                апрель {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '5.' or pet.birthdate[:-4] == '05.' %}
+                май {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '6.' or pet.birthdate[:-4] == '06.' %}
+                июнь {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '7.' or pet.birthdate[:-4] == '07.' %}
+                июль {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '8.' or pet.birthdate[:-4] == '08.' %}
+                август {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '9.' or pet.birthdate[:-4] == '09.' %}
+                сентябрь {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '10.' %}
+                октябрь {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '11.' %}
+                ноябрь {{pet.birthdate[-4:]}}
+
+                {% elif pet.birthdate[:-4] == '12.' %}
+                декабрь {{pet.birthdate[-4:]}}
+
+                {% else %}
+                {{ pet.birthdate }}
+                {% endif %}
+            </p>
+            <p class="card-text">Цена: {{ pet.price }} руб.</p>
+            <p class="card-text">Описание: {{ pet.description }} </p>
+            <h5>
+                <small class="text-muted">Автор объявления: {{ pet.surname }} {{ pet.author_name }}</small>
+            </h5>
+            <h5>
+                <small class="text-muted">Контактный номер телефона: +{{ pet.phone_number }}</small>
+            </h5>
+            <p>
+                <small class="text-muted">Номер объявления: {{ pet.ad_id }}</small>
+            </p>
+
+         <form action="{{ url_for('fav', ad_id=pet.ad_id) }}" method="post">
+
+                {% if favor == 0 %}
+
+                <button type="submit" class="btn btn-primary btn-sm">
+                    Добавить в избранное <span class="badge badge-warning">{{ counting_favor.number_users }}</span>
+                    <span class="sr-only">количество добавлений в избранное</span>
+                </button>
+
+
+                {% elif favor == 1 %}
+
+                <button type="submit" class="btn btn-primary btn-sm">
+                    Удалить из избранного <span class="badge badge-warning">{{ counting_favor.number_users }}</span>
+                    <span class="sr-only">Количество добавлений в избранное</span>
+                </button>
+
+                {% elif favor == -1 %}
+                <span class="badge badge-warning">В избранном:   {{ counting_favor.number_users }}</span>
+
+                {% endif %}
+
+            </form>
+
+        </div>
     </div>
-    <div class="col-md-8-center">
-      <div class="card-body">
-        <h5 class="card-title">{{ pet.category }} породы {{ pet.breed }}</h5>
-        <p class="card-text">Кличка: {{ pet.name }}</p>
-        <p class="card-text">Пол: {{ pet.gender }}</p>
-        <p class="card-text">Дата рождения:
 
-          {% if pet.birthdate == None %}
-          нет информации
-
-          {% elif pet.birthdate[:-4] == '1.' or pet.birthdate[:-4] == '01.' %}
-          январь {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '2.' or pet.birthdate[:-4] == '02.' %}
-          февраль {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '3.' or pet.birthdate[:-4] == '03.' %}
-          март {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '4.' or pet.birthdate[:-4] == '04.' %}
-          апрель {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '5.' or pet.birthdate[:-4] == '05.' %}
-          май {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '6.' or pet.birthdate[:-4] == '06.' %}
-          июнь {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '7.' or pet.birthdate[:-4] == '07.' %}
-          июль {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '8.' or pet.birthdate[:-4] == '08.' %}
-          август {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '9.' or pet.birthdate[:-4] == '09.' %}
-          сентябрь {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '10.' %}
-          октябрь {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '11.' %}
-          ноябрь {{pet.birthdate[-4:]}}
-
-          {% elif pet.birthdate[:-4] == '12.' %}
-          декабрь {{pet.birthdate[-4:]}}
-
-          {% else %}
-          {{ pet.birthdate }}
-          {% endif %}
-        </p>
-        <p class="card-text">Цена: {{ pet.price }} руб.</p>
-        <p class="card-text">Описание: {{ pet.description }} </p>
-        <h5 class="card-text"><small class="text-muted">Автор объявления: {{ pet.surname }} {{ pet.author_name }} </small></h5>
-        <h5 class="card-text"><small class="text-muted">Контактный номер телефона: +{{ pet.phone_number }}</small> </h5>
-        <p class="card-text"><small class="text-muted">Номер объявления: {{ pet.ad_id }} </small></p>
-
-
-<form action="{{ url_for('fav', ad_id=pet.ad_id) }}" method="post">
-
-  {% if favor == 0  %}
-
-  <button type="submit" class="btn btn-primary btn-sm">
-  Добавить в избранное <span class="badge badge-warning">{{ counting_favor.number_users }}</span>
-  <span class="sr-only">количество добавлений в избранное</span>
-</button>
-
-
-  {% elif favor == 1 %}
-
-  <button type="submit" class="btn btn-primary btn-sm">
-  Удалить из избранного <span class="badge badge-warning">{{ counting_favor.number_users }}</span>
-  <span class="sr-only">Количество добавлений в избранное</span>
-</button>
-
-    {% elif favor == -1 %}
-<span class="badge badge-pill badge-warning">В избранном:   {{ counting_favor.number_users }}</span>
-
-  {% endif %}
-
-</form>
-
-
-      </div>
-    </div>
-  </div>
 </div>
 
-         {% endblock %}
+{% endblock %}

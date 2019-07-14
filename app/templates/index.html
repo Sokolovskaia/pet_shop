@@ -17,6 +17,7 @@
 
 <div class="container-fluid-center" style="display: inline-block">
 
+            {% if pets %}
 
         <div class="card-columns" style="max-width: 100%;">
             {% for pet in pets %}
@@ -40,6 +41,11 @@
                 </div>
             </div>
             {% endfor %}
+
+            {% else %}
+            <p class="h4 text-center font-bold"> К сожалению, ничего не найдено по запросу: </p> <h4 class="text-danger">"{{ search }}"</h4>
+            {% endif %}
+
 
 
 

@@ -52,6 +52,7 @@ def start():
         number_of_pages = math.ceil(numb / ADDS_PER_PAGE)
 
         search_result = db.search_pets(db.open_db(db_url), search_lowecased, ADDS_PER_PAGE, pages_offset=0)
+
         if 'pages_offset' in request.args.keys():
             pages_offset = request.args.get('pages_offset')
             search = request.args.get('search')

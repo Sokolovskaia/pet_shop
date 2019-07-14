@@ -39,6 +39,9 @@
 
 
     <div class="card-columns" style="max-width: 900px;">
+
+
+
         {% for pet in ads_for_user %}
         <div class="card">
 
@@ -56,10 +59,10 @@
                 <p class="card-text"><a class="btn btn-outline-info btn-sm"
                                         href="{{ url_for('remove', ad_id=pet.ad_id) }}">Удалить объявление</a></p>
                 <div class="card-footer">
-                    <h5>
-                        <small class="text-muted"><a href="{{ url_for('details', ad_id=pet.ad_id) }}"
-                                                     class="btn btn-primary">Подробнее</a></small>
-                    </h5>
+                    <h7>
+                        <a href="{{ url_for('details', ad_id=pet.ad_id) }}"
+                                                     class="btn btn-primary">Подробнее</a>
+                    </h7>
 
                 </div>
             </div>

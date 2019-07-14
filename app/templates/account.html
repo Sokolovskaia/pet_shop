@@ -6,8 +6,12 @@
 
 
 {% block body %}
+<p>
 
-<p class="h3 text-left font-bold" style="color:#563d7c">Здравствуйте, {{ user_name }}! Вы вошли в ваш личный кабинет</p>
+
+</p>
+
+<p class="h3 text-center font-bold" style="color:#563d7c">Здравствуйте, {{ user_name }}! Вы вошли в ваш личный кабинет</p>
 
 <dl class="row">
     <dt class="col-sm-3">LOGIN</dt>
@@ -32,13 +36,18 @@
 <p><a class="btn btn-info" href="{{ url_for('favourites') }}">Посмотреть избранные объявления</a></p>
 
 
-<p class="h3 text-left font-bold" style="color:#563d7c">Ваши объявления:</p>
+<p>
 
 
-<div class="container-fluid" style="display: inline-block">
+</p>
+
+<p class="h3 text-center font-bold" style="color:#563d7c">Ваши объявления:</p>
 
 
-    <div class="card-columns" style="max-width: 900px;">
+<div class="container-fluid-center" style="display: inline-block">
+
+
+    <div class="card-columns" style="max-width: 100%">
 
 
 

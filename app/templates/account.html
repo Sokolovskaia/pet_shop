@@ -5,58 +5,69 @@
 {% endblock %}
 
 
-  {% block body %}
+{% block body %}
 
-<p class="h3 text-left font-bold" style="color:#563d7c">Здравствуйте, {{ user_name }}!  Вы вошли в ваш личный кабинет</p>
+<p class="h3 text-left font-bold" style="color:#563d7c">Здравствуйте, {{ user_name }}! Вы вошли в ваш личный кабинет</p>
 
 <dl class="row">
-  <dt class="col-sm-3">LOGIN</dt>
-  <dd class="col-sm-9">{{ user_login }}</dd>
+    <dt class="col-sm-3">LOGIN</dt>
+    <dd class="col-sm-9">{{ user_login }}</dd>
 
-  <dt class="col-sm-3">Фамилия</dt>
-  <dd class="col-sm-9">{{ user_surname }}</dd>
+    <dt class="col-sm-3">Фамилия</dt>
+    <dd class="col-sm-9">{{ user_surname }}</dd>
 
-  <dt class="col-sm-3">Имя</dt>
-  <dd class="col-sm-9">{{ user_name }}</dd>
+    <dt class="col-sm-3">Имя</dt>
+    <dd class="col-sm-9">{{ user_name }}</dd>
 
-  <dt class="col-sm-3">Номер телефона</dt>
-  <dd class="col-sm-9">+{{ user_phone_number }}</dd>
+    <dt class="col-sm-3">Номер телефона</dt>
+    <dd class="col-sm-9">+{{ user_phone_number }}</dd>
 
 
-  <dt class="col-sm-3">Вами размещено объявлений</dt>
-  <dd class="col-sm-9"> {{ number_of_ads_for_user.ads }} шт.</dd>
+    <dt class="col-sm-3">Вами размещено объявлений</dt>
+    <dd class="col-sm-9"> {{ number_of_ads_for_user.ads }} шт.</dd>
 
 
 </dl>
 
-  <p><a class="btn btn-info" href="{{ url_for('favourites') }}">Посмотреть избранные объявления</a></p>
-
+<p><a class="btn btn-info" href="{{ url_for('favourites') }}">Посмотреть избранные объявления</a></p>
 
 
 <p class="h3 text-left font-bold" style="color:#563d7c">Ваши объявления:</p>
-            {% for pet in ads_for_user %}
 
-<div class="card" style="width: 18rem;">
 
-    {% if pet.photo %}
-     <img src="/static/{{ pet.photo }}" class="card-img-top" alt="...">
-    {% else %}
-  <img src="/static/7.jpg" class="card-img-top" alt="...">
-    {% endif %}
+<div class="container-fluid" style="display: inline-block">
 
-  <div class="card-body">
-    <h5 class="card-title">{{ pet.category }} породы {{ pet.breed }}</h5>
-    <p class="card-text">Цена: {{ pet.price }} руб. </p>
-    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('edit', ad_id=pet.ad_id) }}">Редактировать</a></p>
-    <p class="card-text"><a class="btn btn-outline-info btn-sm" href="{{ url_for('remove', ad_id=pet.ad_id) }}">Удалить объявление</a></p>
 
-    <a href="{{ url_for('details', ad_id=pet.ad_id) }}" class="btn btn-primary">Подробнее</a>
-  </div>
+    <div class="card-columns" style="max-width: 900px;">
+        {% for pet in ads_for_user %}
+        <div class="card">
+
+            {% if pet.photo %}
+            <img src="/static/{{ pet.photo }}" class="card-img-top" alt="...">
+            {% else %}
+            <img src="/static/7.jpg" class="card-img-top" alt="...">
+            {% endif %}
+
+            <div class="card-body">
+                <h5 class="card-title">{{ pet.category }} породы {{ pet.breed }}</h5>
+                <p class="card-text">Цена: {{ pet.price }} руб. </p>
+                <p class="card-text"><a class="btn btn-outline-info btn-sm"
+                                        href="{{ url_for('edit', ad_id=pet.ad_id) }}">Редактировать</a></p>
+                <p class="card-text"><a class="btn btn-outline-info btn-sm"
+                                        href="{{ url_for('remove', ad_id=pet.ad_id) }}">Удалить объявление</a></p>
+                <div class="card-footer">
+                    <h5>
+                        <small class="text-muted"><a href="{{ url_for('details', ad_id=pet.ad_id) }}"
+                                                     class="btn btn-primary">Подробнее</a></small>
+                    </h5>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
 </div>
-
-
-            {% endfor %}
-
 
 
 {% endblock %}
